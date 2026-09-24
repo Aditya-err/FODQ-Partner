@@ -1,50 +1,152 @@
-# FODQ — Scan. Order. Dine. 🍽️⚡
+<div align="center">
 
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-emerald.svg)](https://github.com/Aditya-err/FODQ-Partner)
-[![Architecture](https://img.shields.io/badge/Architecture-Event--Driven%20Cloud-blue.svg)](docs/architecture/system-architecture.html)
-[![Web](https://img.shields.io/badge/Customer%20Web-Next.js%20PWA-black.svg)](https://nextjs.org)
-[![Mobile](https://img.shields.io/badge/Mobile%20Apps-Flutter-02569B.svg)](https://flutter.dev)
-[![API](https://img.shields.io/badge/Backend%20API-FastAPI%20ASGI-009688.svg)](https://fastapi.tiangolo.com)
-[![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
+  <!-- FODQ Hero Banner with Food Doodle -->
+  <img src="./assets/HEAD2.png" width="100%" alt="FODQ - Scan. Order. Dine." style="border-radius: 12px; max-width: 900px;" />
 
-> **FODQ** is a next-generation, QR-first restaurant operating system and diner engagement platform. Designed to eliminate friction in hospitality, FODQ unifies table-side mobile ordering, real-time Kitchen Display Systems (KDS), cashier billing, and executive analytics into a cohesive, high-performance ecosystem.
+  <br/><br/>
 
----
+  <!-- Brand Title & Tagline -->
+  <p align="center">
+    <a href="#-the-fodq-experience">
+      <img src="https://img.shields.io/badge/EXPERIENCE-Scan._Order._Dine.-FF6B00?style=for-the-badge&logoColor=white" alt="Scan Order Dine" />
+    </a>
+    <a href="#-system-architecture">
+      <img src="https://img.shields.io/badge/ARCHIFY-Interactive_Diagrams-FF3D71?style=for-the-badge&logoColor=white" alt="Interactive Architecture" />
+    </a>
+    <a href="#-built-with">
+      <img src="https://img.shields.io/badge/STACK-Next.js_•_FastAPI_•_Flutter-10B981?style=for-the-badge&logoColor=white" alt="Tech Stack" />
+    </a>
+    <a href="LICENSE">
+      <img src="https://img.shields.io/badge/LICENSE-MIT-8B5CF6?style=for-the-badge&logoColor=white" alt="MIT License" />
+    </a>
+  </p>
 
-## 🌟 The "Scan. Order. Dine." Concept
+  <h3 align="center" style="font-weight: 400; color: #a1a1aa;">
+    The cloud-native, QR-first operating system transforming restaurant dining into an effortless, real-time visual journey.
+  </h3>
 
-Traditional restaurant dining suffers from unnecessary operational bottlenecks: waiting for physical menus, waiting for waitstaff to record orders, transcription errors to the kitchen, and delayed checkouts.
+  <p align="center">
+    <a href="#-what-is-fodq"><b>Explore Platform</b></a> •
+    <a href="#-the-fodq-experience"><b>Diner Journey</b></a> •
+    <a href="#-core-features"><b>Capabilities</b></a> •
+    <a href="#-system-architecture"><b>Architecture</b></a> •
+    <a href="#-product-preview"><b>Product Preview</b></a>
+  </p>
 
-FODQ transforms this paradigm:
+</div>
+
+<img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
+
+## ⚡ What is FODQ?
+
+**FODQ** is a modern food-tech operating ecosystem engineered from the ground up to solve the friction of traditional hospitality. In a world where guests expect instant responsiveness, physical paper menus and delayed waitstaff handoffs create operational drag, order errors, and sluggish table turnover.
+
+FODQ replaces legacy bottlenecks with a **unified, real-time operating flow**:
+
+* 📱 **Zero-Install Web Experience**: Diners scan a physical table QR code and instantly access a rich visual menu directly in their mobile browser. No app download, no account friction.
+* 👨‍🍳 **Synchronous Kitchen Routing**: Line cooks receive digitized tickets on dedicated Kitchen Display Systems (KDS) stations the split-second guests submit their cart.
+* 💳 **Authoritative Table Billing**: Instant checkout with automated tax computation, split-bill support, Razorpay payment verification, and paperless digital receipts.
+* 📊 **Intelligence for Operators**: Live floor occupancy maps, instant table status synchronization (`AVAILABLE` ➔ `OCCUPIED` ➔ `ORDERED` ➔ `BILLING`), and actionable revenue insights.
+
+<img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
+
+## 🍽️ The FODQ Experience
 
 ```
-[ Table Arrival ] ──► [ Scan Dynamic QR ] ──► [ Visual Interactive Menu ]
+ [ Table Arrival ] ──► [ Scan Dynamic QR ] ──► [ Visual Interactive Menu ]
                                                             │
-[ Table Freed ] ◄── [ Instant Settlement ] ◄── [ Real-Time KDS Prep ]
+ [ Table Reset ]   ◄── [ Instant Settlement ] ◄── [ Real-Time KDS Prep ]
 ```
 
-1. **Scan**: Guests scan an encrypted, table-specific QR code using their native phone camera. No mobile app download or account creation required.
-2. **Order**: Diners explore a rich visual menu with customizable ingredients, spice levels, allergen tags, and addon combos. Orders are placed directly to the kitchen with server-authoritative price validation.
-3. **Dine**: Kitchen stations receive orders in real time via responsive KDS displays. Diners observe live preparation status updates on their mobile screens and settle the check seamlessly via digital payments (UPI, credit/debit cards, netbanking) or cash.
+<br/>
 
----
+<table>
+  <tr align="center">
+    <td width="16%">
+      <img src="./assets/qr-code-scan.svg" width="48" height="48" alt="Scan QR" /><br/>
+      <b>1. Scan QR</b><br/>
+      <sub>Camera auto-detects table token</sub>
+    </td>
+    <td width="16%">
+      <img src="./assets/food-menu.svg" width="48" height="48" alt="Explore Menu" /><br/>
+      <b>2. Browse Menu</b><br/>
+      <sub>Photos, dietary tags & addons</sub>
+    </td>
+    <td width="16%">
+      <img src="./assets/dine-in-rounded.svg" width="48" height="48" alt="Order Direct" /><br/>
+      <b>3. Submit Cart</b><br/>
+      <sub>Server-verified authoritative pricing</sub>
+    </td>
+    <td width="16%">
+      <img src="./assets/kitchen.svg" width="48" height="48" alt="Kitchen KDS" /><br/>
+      <b>4. Live KDS</b><br/>
+      <sub>Line stations prep in real time</sub>
+    </td>
+    <td width="16%">
+      <img src="./assets/receipt.svg" width="48" height="48" alt="Itemized Bill" /><br/>
+      <b>5. Itemized Bill</b><br/>
+      <sub>Automated taxes & discounts</sub>
+    </td>
+    <td width="16%">
+      <img src="./assets/razorpay.svg" width="64" alt="Digital Pay" /><br/>
+      <b>6. Settle & Free</b><br/>
+      <sub>UPI / Cards & table reset</sub>
+    </td>
+  </tr>
+</table>
 
-## 🚀 Key Feature Matrix
+<img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
 
-| Capability | Customer Experience | Kitchen & Floor Staff | Management & Owners |
-| :--- | :--- | :--- | :--- |
-| **Menu Exploration** | High-res imagery, diet filters (Veg/Non-Veg), spice selectors | Dynamic 86'd out-of-stock toggles | Multi-category visual catalog builder with addon groups |
-| **Ordering** | Zero-install PWA, simultaneous table carting | Instant ticket dispatch with station routing | Order history, cancellation audits, peak rush controls |
-| **Live Tracking** | Accepted ➔ Preparing ➔ Ready ➔ Served updates | Drag-and-drop or tap status progression timers | Average prep time monitoring & bottleneck alerts |
-| **Billing & Payments**| UPI Intent, Cards, NetBanking, split bill review | Cash desk drawer tracking, paperless digital invoices | Server-side tax calculation, discount & refund audits |
-| **Table Management** | Automatic dining session association | Floor occupancy map, dirty/clean table state sync | Permanent FODQ identity, bulk PDF/sticker QR export |
-| **Governance** | Strict privacy (zero tracking cookies required) | Station-restricted UI views (Chef, Waiter, Cashier) | Granular RBAC, trusted device sessions, revenue reports |
+## 🚀 Core Features
 
----
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>📲 Zero-Install Guest Ordering</h3>
+      <ul>
+        <li><b>Frictionless Ingress:</b> Dynamic QR code scanning opens the lightweight PWA instantly in Mobile Safari or Chrome.</li>
+        <li><b>Rich Visual Catalog:</b> High-resolution photography, categorized navigation, allergen filters, and Veg/Non-Veg toggles.</li>
+        <li><b>Modular Customization:</b> Multi-level modifiers (portion sizing, spice level, ingredient add-ons, chef special instructions).</li>
+        <li><b>Synchronous Table Carts:</b> Diners seated at the same table can browse and review items seamlessly.</li>
+      </ul>
+    </td>
+    <td width="50%" valign="top">
+      <h3>👨‍🍳 Kitchen Display System (KDS)</h3>
+      <ul>
+        <li><b>Instant Ticket Ingestion:</b> Orders appear instantly on kitchen tablets without ticket printers or paper waste.</li>
+        <li><b>Station-Based Dispatch:</b> Routing of appetizers, main entrées, and bar beverages to specific prep lines.</li>
+        <li><b>Stage Progression:</b> Clear touch progression (<code>ACCEPTED</code> ➔ <code>PREPARING</code> ➔ <code>READY</code> ➔ <code>SERVED</code>).</li>
+        <li><b>Visual Timer Alerts:</b> Color-coded elapsed timers alert kitchen staff to ticket delays before bottlenecks occur.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🧾 Authoritative Fiscal Billing</h3>
+      <ul>
+        <li><b>Server-Side Calculation:</b> Item subtotals, GST/VAT taxes, and service fees are computed securely on the backend.</li>
+        <li><b>Flexible Settlement:</b> Diners pay directly through integrated UPI Intent, cards, netbanking, or request cash payment.</li>
+        <li><b>Cryptographic Webhook Capture:</b> Gateway confirmations securely transition bills to <code>PAID</code> status.</li>
+        <li><b>Digital Paperless Invoices:</b> Instant receipt generation directly to the diner's mobile screen.</li>
+      </ul>
+    </td>
+    <td width="50%" valign="top">
+      <h3>📊 Restaurateur Governance</h3>
+      <ul>
+        <li><b>Floor & Table Provisioning:</b> Dynamic table layout designer with bulk PDF and sticker sheet QR code generation.</li>
+        <li><b>Live Table Status:</b> Real-time synchronization of floor occupancy (<code>AVAILABLE</code>, <code>OCCUPIED</code>, <code>ORDERED</code>, <code>BILLING</code>).</li>
+        <li><b>Dynamic 86'd Inventory:</b> One-tap out-of-stock toggling prevents customers from ordering unavailable dishes.</li>
+        <li><b>Actionable Analytics:</b> Track daily sales revenue, peak ordering hours, popular dishes, and table turn rates.</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
-## 🏛️ High-Level System Architecture
+<img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
 
-FODQ is architected as an asynchronous, event-driven platform separating client interfaces, business validation authority, real-time message brokering, and durable multi-tenant persistence.
+## 🏛️ System Architecture
+
+FODQ leverages an event-driven, cloud-native architecture decoupling client presentation, authoritative backend validation, low-latency message distribution, and durable ACID storage.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -85,101 +187,177 @@ FODQ is architected as an asynchronous, event-driven platform separating client 
  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
 ```
 
-> 💡 **Explore Interactive Architecture**: Open the interactive, validated [Archify System Architecture](docs/architecture/system-architecture.html) diagram to inspect live component inspectability, views, and data routes.
+### 📐 Interactive Archify Specifications
 
----
+The repository includes standalone, interactive architectural models built with Archify:
 
-## 🔄 Major Operational Flows
-
-### 1. Customer Ordering & Kitchen Dispatch Flow
-1. **Physical Presence Verification**: Customer scans physical table QR code. Platform validates cryptographic token and opens a table-bound dining session.
-2. **Catalog Retrieval**: Customer browses fast, CDN-cached digital menu with variants, modifiers, and addon groups.
-3. **Authoritative Order Placement**: When customer submits cart, prices and taxes are recalculated strictly on the server to prevent client-side manipulation.
-4. **Kitchen Broadcast**: Order is converted into kitchen tickets and broadcast in sub-milliseconds to the relevant KDS stations.
-5. **Real-time Status Updates**: Line chefs update ticket progress (`ACCEPTED` ➔ `PREPARING` ➔ `READY`), streaming updates to the diner's screen.
-
-> 📊 *View the full interactive sequence in [ordering-flow.html](docs/architecture/ordering-flow.html).*
-
-### 2. Billing, Payment & Table Turnover Flow
-1. **Invoice Generation**: Diners or floor cashiers initiate bill generation. Server calculates exact item subtotals, configurable taxes (GST/VAT), service charges, and applied discounts.
-2. **Digital Settlement**: Diners pay directly from their smartphone via integrated UPI / Card gateway, or choose to settle with cash at the floor cashier station.
-3. **Cryptographic Webhook Verification**: The payment gateway notifies FODQ via signed webhook signatures. Once verified, the bill is marked `PAID`.
-4. **Session Closure & Table Reset**: Dine session closes, the table is automatically reset to `AVAILABLE`, and an itemized digital receipt is delivered to the customer.
-
-> 📊 *View the interactive user journey in [customer-journey.html](docs/architecture/customer-journey.html).*
-
-### 3. Restaurateur & Floor Management Workflow
-1. **Venue Identity**: Owners configure restaurant details, service hours, currency, and permanent FODQ codes.
-2. **Floor Provisioning**: Physical dining tables are created with dynamic QR identifiers. Export printable high-density QR stickers or PDF table stands in bulk.
-3. **Catalog Management**: Add dishes, organize categories, attach high-resolution food photography, and configure modular addon groups.
-4. **Business Analytics**: Review real-time sales revenue, average ticket sizes, peak turnover hours, and top-selling dishes.
-
-> 📊 *View the interactive restaurant operations diagram in [restaurant-workflow.html](docs/architecture/restaurant-workflow.html).*
-
----
-
-## 🛠️ Technology Stack Overview
-
-### Frontend & Client Applications
-- **Customer Web (PWA)**: Built with Next.js, React, and modern Tailwind CSS. Optimized for mobile viewports, sub-second First Contentful Paint (FCP), and zero-app installation.
-- **Partner & Kitchen Applications**: Responsive Next.js web application for desktop/tablets alongside native Flutter applications for Android and iOS devices.
-
-### Backend Services & Authority
-- **Core API Engine**: FastAPI (Python ASGI) providing strict OpenAPI contracts, Pydantic type safety, and microsecond endpoint latencies.
-- **Asynchronous Processing**: Non-blocking asynchronous I/O handling high concurrency during peak dining rush hours.
-
-### Data & Message Distribution
-- **Relational Data Store**: PostgreSQL database serving as the durable source of truth for restaurants, tables, menus, orders, bills, and immutable audit logs.
-- **Real-Time Event Broker & Cache**: Redis pub/sub broker for instant kitchen ticket broadcasting, distributed locks, and sub-millisecond menu caching.
-
-### Cloud Integrations & Payments
-- **Payment Processing**: Integrated digital payment gateway (Razorpay) supporting UPI Intent, dynamic QR, cards, and netbanking with signed webhook capture.
-- **Asset Storage & CDN**: Cloud asset storage (Cloudinary / CDN) for responsive, WebP-compressed food imagery.
-
----
-
-## 📐 Interactive Architecture Specifications
-
-The `docs/architecture/` folder contains validated interactive architecture models created using Archify:
-
-| Diagram Specification | Interactive Viewer | Description |
+| Architecture Specification | Interactive Diagram | Architecture Scope |
 | :--- | :--- | :--- |
-| **System Architecture** | [`system-architecture.html`](docs/architecture/system-architecture.html) | Global system components, trust boundaries, and platform connections |
-| **Ordering & Billing Flow** | [`ordering-flow.html`](docs/architecture/ordering-flow.html) | Sequence diagram detailing scan, kitchen dispatch, and payment capture |
-| **Customer Journey** | [`customer-journey.html`](docs/architecture/customer-journey.html) | Step-by-step guest lifecycle from table arrival to receipt generation |
-| **Restaurant Operations** | [`restaurant-workflow.html`](docs/architecture/restaurant-workflow.html) | Restaurateur operational workflow across floor setup, KDS, and analytics |
+| 🌐 **System Architecture** | [**View Diagram**](docs/architecture/system-architecture.html) | Global components, trust boundaries, and platform connections |
+| 🔄 **Ordering & Kitchen Flow** | [**View Diagram**](docs/architecture/ordering-flow.html) | Sequence from QR scan to kitchen ticket and payment capture |
+| 🚶 **Customer Experience Journey** | [**View Diagram**](docs/architecture/customer-journey.html) | Complete step-by-step diner experience across table arrival and checkout |
+| 🧑‍💼 **Restaurant Partner Workflow** | [**View Diagram**](docs/architecture/restaurant-workflow.html) | Operator workflow across venue setup, menu authoring, and analytics |
 
----
+<img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
 
-## 🔒 Security & Fiscal Integrity Principles
+## 🔍 How It Works
 
-1. **Client Never Dictates Price**: All item amounts, modifier add-ons, discounts, and taxes are strictly recalculated on the backend server.
-2. **Physical Presence Verification**: QR tokens contain cryptographically signed parameters to prove guests are physically seated at the designated table.
-3. **Multi-Tenant Isolation**: Tenant scoping is enforced at the database query layer, ensuring complete data isolation between restaurants.
-4. **Tamper-Evident Audit Logging**: Sensitive operations (price changes, order cancellations, bill adjustments) are recorded in append-only audit ledgers.
+```
+ ┌──────────────┐      ┌──────────────┐      ┌──────────────┐      ┌──────────────┐
+ │ 1. Table QR  │ ──►  │  2. Dynamic  │ ──►  │ 3. Automated │ ──►  │  4. Instant  │
+ │  Activation  │      │  Menu Sync   │      │ Kitchen KDS  │      │  Settlement  │
+ └──────────────┘      └──────────────┘      └──────────────┘      └──────────────┘
+```
 
----
+1. **Venue & Table Setup**: The restaurateur defines table numbers and capacities. FODQ provisions encrypted table tokens and exports printable sticker sheets.
+2. **Instant Diner Discovery**: The diner scans the table QR. The system creates an active session and serves the digital catalog with sub-second latency.
+3. **Kitchen Synchronization**: Orders bypass paper transcription, triggering instantaneous visual and audible alerts on line-cook KDS screens.
+4. **Checkout & Reset**: The check is requested and settled digitally. The session closes, freeing the table status to `AVAILABLE` for the next dining party.
+
+<img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
+
+## 🛠️ Built With
+
+FODQ is built on a battle-tested, high-performance technology stack:
+
+<br/>
+
+<table>
+  <tr align="center">
+    <td width="20%">
+      <img src="./assets/next-js.svg" width="48" height="48" alt="Next.js" /><br/><br/>
+      <b>Next.js PWA</b><br/>
+      <sub>Customer Web & Admin</sub>
+    </td>
+    <td width="20%">
+      <img src="./assets/fastapi-1.svg" width="48" height="48" alt="FastAPI" /><br/><br/>
+      <b>FastAPI ASGI</b><br/>
+      <sub>Core Business Authority</sub>
+    </td>
+    <td width="20%">
+      <img src="./assets/python-5.svg" width="48" height="48" alt="Python" /><br/><br/>
+      <b>Python 3.12</b><br/>
+      <sub>Strict Type-Checked Logic</sub>
+    </td>
+    <td width="20%">
+      <img src="./assets/flutter.svg" width="48" height="48" alt="Flutter" /><br/><br/>
+      <b>Flutter</b><br/>
+      <sub>Mobile App Foundation</sub>
+    </td>
+    <td width="20%">
+      <img src="./assets/postgresql-inc-2.svg" width="48" height="48" alt="PostgreSQL" /><br/><br/>
+      <b>PostgreSQL</b><br/>
+      <sub>Relational Source of Truth</sub>
+    </td>
+  </tr>
+  <tr align="center">
+    <td width="20%">
+      <img src="./assets/redis.svg" width="48" height="48" alt="Redis" /><br/><br/>
+      <b>Redis 7</b><br/>
+      <sub>Pub/Sub & Distributed Cache</sub>
+    </td>
+    <td width="20%">
+      <img src="./assets/tailwind-css-2.svg" width="48" height="48" alt="Tailwind CSS" /><br/><br/>
+      <b>Tailwind CSS</b><br/>
+      <sub>Responsive Mobile UI</sub>
+    </td>
+    <td width="20%">
+      <img src="./assets/razorpay.svg" width="80" alt="Razorpay" /><br/><br/>
+      <b>Razorpay</b><br/>
+      <sub>UPI & Card Gateway</sub>
+    </td>
+    <td width="20%">
+      <img src="./assets/docker.svg" width="48" height="48" alt="Docker" /><br/><br/>
+      <b>Docker</b><br/>
+      <sub>Containerized Runtime</sub>
+    </td>
+    <td width="20%">
+      <img src="./assets/git-icon.svg" width="48" height="48" alt="Git" /><br/><br/>
+      <b>Git & GitHub</b><br/>
+      <sub>Version Control & Releases</sub>
+    </td>
+  </tr>
+</table>
+
+<img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
+
+## 📱 Product Preview
+
+Verified real-device mobile and tablet interface previews across the FODQ ecosystem:
+
+<br/>
+
+<table>
+  <tr align="center">
+    <td width="20%">
+      <img src="./screenshots/device_screen_menu.png" width="100%" alt="Interactive Menu" /><br/>
+      <sub><b>Digital Menu</b><br/>Categories, photos & dietary tags</sub>
+    </td>
+    <td width="20%">
+      <img src="./screenshots/device_screen_kitchen.png" width="100%" alt="Kitchen KDS" /><br/>
+      <sub><b>Kitchen KDS</b><br/>Live ticket queues & timers</sub>
+    </td>
+    <td width="20%">
+      <img src="./screenshots/device_screen_billing.png" width="100%" alt="Table Billing" /><br/>
+      <sub><b>Billing POS</b><br/>Automated tax & settlements</sub>
+    </td>
+    <td width="20%">
+      <img src="./screenshots/device_screen_tables.png" width="100%" alt="Floor Management" /><br/>
+      <sub><b>Floor Tables</b><br/>Live occupancy monitoring</sub>
+    </td>
+    <td width="20%">
+      <img src="./screenshots/device_screen_table_qr_code.png" width="100%" alt="Table QR Token" /><br/>
+      <sub><b>QR Provisioning</b><br/>Dynamic table identifiers</sub>
+    </td>
+  </tr>
+</table>
+
+<img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
+
+## 🔒 Security & Data Integrity
+
+* 🛡️ **Zero Price Tampering**: Client devices never dictate prices, tax rates, or bill totals. All orders and line items undergo rigorous recalculation on the authoritative backend.
+* 🔐 **Cryptographic Presence Verification**: Dynamic QR tokens require physical table proximity verification before sessions can be established.
+* 🏢 **Multi-Tenant Isolation**: Complete isolation guarantees that restaurant menus, orders, tables, and financial analytics remain strictly scoped to each tenant.
+* 📜 **Tamper-Evident Audit Trails**: Critical actions such as item 86-ing, bill voids, order cancellations, and refunds are logged with timestamps and operator identity.
+
+<img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
 
 ## 🗺️ Product Roadmap
 
-- [x] Zero-install QR mobile ordering web application
-- [x] Multi-station Kitchen Display System (KDS) with live status sync
-- [x] Authoritative server-side billing with digital payment gateway integration
-- [x] Table QR provisioning and bulk sticker/PDF export
-- [x] Owner analytics dashboard for revenue, peak hours, and popular dishes
-- [ ] Offline-tolerant local kitchen sync mode for network interruptions
-- [ ] Multi-language diner menu localization (English, Hindi, regional dialects)
-- [ ] Automated inventory deduction tied to live recipe ingredients
-- [ ] WhatsApp digital receipt and loyalty re-engagement integration
+- [x] **Zero-Install Customer Web (PWA)**: Sub-second mobile menu rendering and dietary filtering
+- [x] **Kitchen Display System (KDS)**: Real-time ticket dispatch with stage progression
+- [x] **Authoritative Billing & Invoicing**: Automated taxes, itemization, and paperless invoices
+- [x] **Digital Payment Gateway**: Razorpay UPI and card settlement with signed webhook verification
+- [x] **Floor & Table Management**: Dynamic table provisioning with bulk sticker and PDF export
+- [x] **Analytics Dashboard**: Operational metrics, peak hour analysis, and sales turnover
+- [ ] **Offline Kitchen Resilience**: Local network queueing for intermittent internet connectivity
+- [ ] **Multi-Language Diner Localization**: Seamless language switching across regional languages
+- [ ] **Live Inventory Depletion**: Automated stock decrementing mapped to ingredient recipes
+- [ ] **Direct Customer Feedback Loop**: Post-meal rating collection and guest loyalty incentives
 
----
+<img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
+
+## 📈 Project Status
+
+| Area | Status | Channel |
+| :--- | :--- | :--- |
+| **Customer Web App** | <img src="./assets/approved.svg" width="16" /> Production Ready | Mobile Browsers (Zero-Install) |
+| **Kitchen Display (KDS)** | <img src="./assets/approved.svg" width="16" /> Production Ready | Tablets & Web Displays |
+| **Cashier & Billing Desk** | <img src="./assets/approved.svg" width="16" /> Production Ready | Desktop & POS Tablets |
+| **Management Dashboard** | <img src="./assets/approved.svg" width="16" /> Production Ready | Web & Native Mobile |
+| **Core API Services** | <img src="./assets/approved.svg" width="16" /> Production Ready | Cloud ASGI Engine |
+
+<img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
 
 ## 📄 License
 
-This repository is distributed under the **MIT License**. See [`LICENSE`](LICENSE) for complete details.
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for complete terms.
 
----
+<br/>
 
 <div align="center">
-  <sub>FODQ Platform • Transforming the Dining Experience • Scan. Order. Dine.</sub>
+  <img src="./assets/logo.png" width="64" height="64" alt="FODQ Logo" /><br/>
+  <b>FODQ Technologies</b><br/>
+  <sub>Transforming Hospitality Operations • Scan. Order. Dine.</sub>
 </div>

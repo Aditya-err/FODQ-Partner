@@ -1,0 +1,24 @@
+<svg width="100%" height="8" viewBox="0 0 1200 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fodq-divider-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF5722" stop-opacity="0"/>
+      <stop offset="8%" stop-color="#FF6B00" stop-opacity="0.4"/>
+      <stop offset="25%" stop-color="#FF8A00" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#FFA826" stop-opacity="1"/>
+      <stop offset="78%" stop-color="#FF3D71" stop-opacity="0.85"/>
+      <stop offset="92%" stop-color="#A855F7" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="fodq-glow" x="-10%" y="-200%" width="120%" height="500%">
+      <feGaussianBlur stdDeviation="2" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Ambient soft glow layer -->
+  <rect x="20" y="2" width="1160" height="4" rx="2" fill="url(#fodq-divider-grad)" opacity="0.4" filter="url(#fodq-glow)"/>
+  <!-- Sharp core filament -->
+  <rect x="30" y="3.25" width="1140" height="1.5" rx="0.75" fill="url(#fodq-divider-grad)"/>
+</svg>
