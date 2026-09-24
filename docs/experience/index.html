@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FODQ — Interactive Experience | Scan. Order. Dine.</title>
+  <meta name="description" content="Explore the interactive diner journey, live KDS dispatch, authoritative billing, and cloud architecture of the FODQ restaurant operating system." />
+  <link rel="icon" type="image/png" href="../../assets/logo.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Background decorative glows -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <!-- Navigation Bar -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="#" class="brand-group">
+        <img src="../../assets/logo.png" alt="FODQ Logo" class="brand-logo" />
+        <div class="brand-text">
+          <span class="brand-title">FODQ</span>
+          <span class="brand-tag">Scan. Order. Dine.</span>
+        </div>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#journey" class="nav-item">Diner Journey</a>
+        <a href="#features" class="nav-item">Features</a>
+        <a href="#architecture" class="nav-item">Architecture</a>
+        <a href="#preview" class="nav-item">Screenshots</a>
+        <a href="#tech" class="nav-item">Tech Stack</a>
+        <a href="https://github.com/Aditya-err/FODQ-Partner" class="btn-github" target="_blank" rel="noopener noreferrer">
+          <img src="../../assets/github-icon-2.svg" alt="GitHub" width="16" height="16" />
+          <span>GitHub</span>
+        </a>
+      </nav>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="badge-pill">
+        <span class="badge-dot"></span>
+        <span class="badge-text">Interactive Product Showcase • Zero-Install Hospitality</span>
+      </div>
+      
+      <h1 class="hero-title">
+        Digital dining,<br/>
+        <span class="gradient-text">redesigned around the table.</span>
+      </h1>
+      
+      <p class="hero-subtitle">
+        FODQ is the cloud-native, QR-first restaurant operating system unifying table-side ordering, instant kitchen routing, authoritative billing, and real-time operator intelligence.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#journey" class="btn-primary">
+          <span>Explore Diner Journey</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#architecture" class="btn-secondary">
+          <span>View Interactive Architecture</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
+      <!-- Quick Metrics Strip -->
+      <div class="hero-metrics">
+        <div class="metric-card">
+          <span class="metric-val">0s</span>
+          <span class="metric-lbl">App Install Friction</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-card">
+          <span class="metric-val">&lt;50ms</span>
+          <span class="metric-lbl">KDS Event Dispatch</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-card">
+          <span class="metric-val">100%</span>
+          <span class="metric-lbl">Server Price Authority</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-card">
+          <span class="metric-val">ACID</span>
+          <span class="metric-lbl">Durable Multi-Tenant State</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Glowing Divider -->
+  <div class="divider-wrapper">
+    <img src="../../assets/dividers/orange-glow-line.svg" class="glow-divider" alt="divider" />
+  </div>
+
+  <!-- Interactive Diner Journey Section -->
+  <section id="journey" class="section journey-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-eyebrow">STEP-BY-STEP SIMULATION</span>
+        <h2 class="section-title">The Complete <span class="gradient-text">Diner Journey</span></h2>
+        <p class="section-desc">Click any phase below to experience how FODQ orchestrates every step from guest table arrival to digital settlement and table reset.</p>
+      </div>
+
+      <!-- Journey Step Selector Bar -->
+      <div class="journey-nav-wrapper">
+        <div class="journey-nav" id="journeyNav">
+          <!-- Dynamically populated by script.js -->
+        </div>
+      </div>
+
+      <!-- Active Journey Display Board -->
+      <div class="journey-stage-card" id="journeyStageCard">
+        <div class="stage-card-grid">
+          <div class="stage-info">
+            <div class="stage-meta">
+              <span class="stage-step-tag" id="stageStepTag">STEP 01</span>
+              <span class="stage-phase-badge" id="stagePhaseBadge">GUEST INGRESS</span>
+            </div>
+            <h3 class="stage-title" id="stageTitle">Scan Table QR</h3>
+            <p class="stage-desc" id="stageDesc">
+              Diners arrive at the table and scan the dynamic physical QR code using their smartphone camera. The cryptographic token validates physical presence and instantly creates an active dining session.
+            </p>
+            <div class="stage-highlights" id="stageHighlights">
+              <!-- Dynamically populated -->
+            </div>
+            <div class="stage-action-bar">
+              <button class="btn-step-nav" id="btnPrevStep" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                <span>Previous</span>
+              </button>
+              <button class="btn-step-nav btn-step-next" id="btnNextStep">
+                <span>Next Transition</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="stage-visual">
+            <div class="stage-preview-box" id="stagePreviewBox">
+              <div class="stage-icon-halo">
+                <img src="../../assets/qr-code-scan.svg" id="stageIcon" class="stage-graphic" alt="Step Icon" />
+              </div>
+              <div class="stage-badge-live">
+                <span class="live-dot"></span>
+                <span id="stageStatusText">Table Status: OCCUPIED</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Glowing Divider -->
+  <div class="divider-wrapper">
+    <img src="../../assets/dividers/orange-glow-line.svg" class="glow-divider" alt="divider" />
+  </div>
+
+  <!-- Interactive Feature Explorer -->
+  <section id="features" class="section features-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-eyebrow">SYSTEM CAPABILITIES</span>
+        <h2 class="section-title">Built for Modern <span class="gradient-text">Hospitality</span></h2>
+        <p class="section-desc">Click any capability card below to expand in-depth operational mechanisms, safeguards, and operator benefits.</p>
+      </div>
+
+      <div class="features-grid" id="featuresGrid">
+        <!-- Feature cards rendered with data -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Glowing Divider -->
+  <div class="divider-wrapper">
+    <img src="../../assets/dividers/orange-glow-line.svg" class="glow-divider" alt="divider" />
+  </div>
+
+  <!-- Interactive Architecture Section -->
+  <section id="architecture" class="section arch-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-eyebrow">SANITY-TESTED ARCHIFY SPECIFICATIONS</span>
+        <h2 class="section-title">Explore System <span class="gradient-text">Architecture</span></h2>
+        <p class="section-desc">FODQ architecture models are compiled with the official Archify verification suite. Click any card below to launch the full interactive viewer.</p>
+      </div>
+
+      <div class="arch-cards-grid">
+        <div class="arch-card">
+          <div class="arch-card-header">
+            <span class="arch-type-pill">SYSTEM ARCHITECTURE</span>
+            <span class="arch-check-badge">✓ 9/9 Validated</span>
+          </div>
+          <h3 class="arch-card-title">Global Platform Architecture</h3>
+          <p class="arch-card-desc">Overview of client layers, edge reverse proxy, FastAPI core engine, Redis event broker, PostgreSQL source of truth, and external payment gateways.</p>
+          <a href="../architecture/system-architecture.html" class="btn-arch-launch" target="_blank" rel="noopener noreferrer">
+            <span>Launch Interactive Model</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+
+        <div class="arch-card">
+          <div class="arch-card-header">
+            <span class="arch-type-pill">SEQUENCE MODEL</span>
+            <span class="arch-check-badge">✓ 9/9 Validated</span>
+          </div>
+          <h3 class="arch-card-title">Ordering & Kitchen Sequence</h3>
+          <p class="arch-card-desc">End-to-end event sequence tracing table presence proof, cart submission, instant KDS routing, chef status updates, and digital payment webhooks.</p>
+          <a href="../architecture/ordering-flow.html" class="btn-arch-launch" target="_blank" rel="noopener noreferrer">
+            <span>Launch Interactive Model</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+
+        <div class="arch-card">
+          <div class="arch-card-header">
+            <span class="arch-type-pill">WORKFLOW V2</span>
+            <span class="arch-check-badge">✓ 9/9 Validated</span>
+          </div>
+          <h3 class="arch-card-title">Customer Experience Journey</h3>
+          <p class="arch-card-desc">Multi-lane workflow mapping diner discovery, item modifier configuration, real-time ticket preparation tracking, and paperless receipt delivery.</p>
+          <a href="../architecture/customer-journey.html" class="btn-arch-launch" target="_blank" rel="noopener noreferrer">
+            <span>Launch Interactive Model</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+
+        <div class="arch-card">
+          <div class="arch-card-header">
+            <span class="arch-type-pill">WORKFLOW V2</span>
+            <span class="arch-check-badge">✓ 9/9 Validated</span>
+          </div>
+          <h3 class="arch-card-title">Restaurant Partner Workflow</h3>
+          <p class="arch-card-desc">Restaurateur operational lifecycle covering venue onboarding, floor plan layout, vector QR provisioning, KDS orchestration, cashier billing, and sales analytics.</p>
+          <a href="../architecture/restaurant-workflow.html" class="btn-arch-launch" target="_blank" rel="noopener noreferrer">
+            <span>Launch Interactive Model</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Glowing Divider -->
+  <div class="divider-wrapper">
+    <img src="../../assets/dividers/orange-glow-line.svg" class="glow-divider" alt="divider" />
+  </div>
+
+  <!-- Interactive Product Preview Gallery (with Lightbox) -->
+  <section id="preview" class="section preview-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-eyebrow">PHYSICAL DEVICE CAPTURES</span>
+        <h2 class="section-title">Verified <span class="gradient-text">Product Previews</span></h2>
+        <p class="section-desc">Click any screenshot below to open high-resolution device preview.</p>
+      </div>
+
+      <div class="gallery-grid" id="galleryGrid">
+        <div class="gallery-card" data-img="../../screenshots/device_screen_menu.png" data-title="Digital Menu & Customization">
+          <div class="gallery-img-wrapper">
+            <img src="../../screenshots/device_screen_menu.png" alt="Digital Menu" loading="lazy" />
+            <div class="gallery-overlay">
+              <span class="btn-zoom">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+                <span>View Fullscreen</span>
+              </span>
+            </div>
+          </div>
+          <div class="gallery-caption">
+            <h4>Digital Menu & Filters</h4>
+            <p>High-res photography, dietary tags & addon modifiers</p>
+          </div>
+        </div>
+
+        <div class="gallery-card" data-img="../../screenshots/device_screen_kitchen.png" data-title="Kitchen Display System (KDS)">
+          <div class="gallery-img-wrapper">
+            <img src="../../screenshots/device_screen_kitchen.png" alt="Kitchen KDS" loading="lazy" />
+            <div class="gallery-overlay">
+              <span class="btn-zoom">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+                <span>View Fullscreen</span>
+              </span>
+            </div>
+          </div>
+          <div class="gallery-caption">
+            <h4>Live Kitchen KDS</h4>
+            <p>Real-time ticket queue & line cook status updates</p>
+          </div>
+        </div>
+
+        <div class="gallery-card" data-img="../../screenshots/device_screen_billing.png" data-title="Floor Billing & Cashier Desk">
+          <div class="gallery-img-wrapper">
+            <img src="../../screenshots/device_screen_billing.png" alt="Table Billing" loading="lazy" />
+            <div class="gallery-overlay">
+              <span class="btn-zoom">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+                <span>View Fullscreen</span>
+              </span>
+            </div>
+          </div>
+          <div class="gallery-caption">
+            <h4>Authoritative Billing</h4>
+            <p>Tax itemization, split payments & receipts</p>
+          </div>
+        </div>
+
+        <div class="gallery-card" data-img="../../screenshots/device_screen_tables.png" data-title="Floor Table Management">
+          <div class="gallery-img-wrapper">
+            <img src="../../screenshots/device_screen_tables.png" alt="Floor Tables" loading="lazy" />
+            <div class="gallery-overlay">
+              <span class="btn-zoom">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+                <span>View Fullscreen</span>
+              </span>
+            </div>
+          </div>
+          <div class="gallery-caption">
+            <h4>Floor & Occupancy</h4>
+            <p>Live status sync: Available, Occupied, Ordered, Billing</p>
+          </div>
+        </div>
+
+        <div class="gallery-card" data-img="../../screenshots/device_screen_table_qr_code.png" data-title="Dynamic QR Provisioning">
+          <div class="gallery-img-wrapper">
+            <img src="../../screenshots/device_screen_table_qr_code.png" alt="Table QR Token" loading="lazy" />
+            <div class="gallery-overlay">
+              <span class="btn-zoom">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+                <span>View Fullscreen</span>
+              </span>
+            </div>
+          </div>
+          <div class="gallery-caption">
+            <h4>QR Provisioning</h4>
+            <p>Encrypted tokens & instant sticker/PDF export</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Glowing Divider -->
+  <div class="divider-wrapper">
+    <img src="../../assets/dividers/orange-glow-line.svg" class="glow-divider" alt="divider" />
+  </div>
+
+  <!-- Interactive Tech Stack Section -->
+  <section id="tech" class="section tech-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-eyebrow">ENGINEERING FOUNDATION</span>
+        <h2 class="section-title">Built with Proven <span class="gradient-text">Technologies</span></h2>
+        <p class="section-desc">Click any technology card below to see specifically how it powers the FODQ architecture.</p>
+      </div>
+
+      <div class="tech-grid" id="techGrid">
+        <!-- Rendered dynamically from script.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="cta-section">
+    <div class="cta-container">
+      <div class="cta-box">
+        <h2 class="cta-title">Ready to explore the open repository?</h2>
+        <p class="cta-desc">Check out the comprehensive documentation, verified architecture specifications, and roadmap on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="https://github.com/Aditya-err/FODQ-Partner" class="btn-primary" target="_blank" rel="noopener noreferrer">
+            <img src="../../assets/github-icon-2.svg" width="18" height="18" alt="GitHub" />
+            <span>View on GitHub</span>
+          </a>
+          <a href="../architecture/system-architecture.html" class="btn-secondary" target="_blank" rel="noopener noreferrer">
+            <span>Interactive Architecture</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../../assets/logo.png" width="40" height="40" alt="FODQ Logo" />
+        <span class="footer-title">FODQ Technologies</span>
+        <p class="footer-tagline">Transforming Hospitality Operations • Scan. Order. Dine.</p>
+      </div>
+      <div class="footer-meta">
+        <p>Released under the <a href="../../LICENSE" target="_blank">MIT License</a>. Clean & Sanitized Public Release.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal for Screenshots -->
+  <div class="lightbox-modal" id="lightboxModal" role="dialog" aria-hidden="true">
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-content">
+      <button class="lightbox-close" id="lightboxClose" aria-label="Close Lightbox">&times;</button>
+      <img src="" id="lightboxImg" alt="Preview Fullscreen" />
+      <div class="lightbox-caption" id="lightboxCaption">Screenshot Preview</div>
+    </div>
+  </div>
+
+  <!-- Tech Info Modal -->
+  <div class="tech-modal" id="techModal" role="dialog" aria-hidden="true">
+    <div class="tech-modal-backdrop" id="techModalBackdrop"></div>
+    <div class="tech-modal-card">
+      <button class="tech-modal-close" id="techModalClose" aria-label="Close Modal">&times;</button>
+      <div class="tech-modal-header">
+        <img src="" id="techModalIcon" width="48" height="48" alt="Tech Icon" />
+        <div>
+          <h3 id="techModalTitle">Technology</h3>
+          <span class="tech-modal-role" id="techModalRole">Role in Architecture</span>
+        </div>
+      </div>
+      <p id="techModalDesc" class="tech-modal-desc">Description of usage.</p>
+      <div class="tech-modal-highlights" id="techModalHighlights">
+        <!-- Highlights -->
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
