@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "FODQ End-to-End Ordering & Billing Flow",
+    "subtitle": "Sanitized sequence from zero-install QR scan and kitchen dispatch to digital payment and receipt generation",
+    "viewBox": [920, 940],
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "views": [
+      {
+        "id": "menu-discovery",
+        "label": "1. QR Discovery & Menu",
+        "focus": ["customer", "edge", "order_engine"],
+        "note": "Customer scans table QR code and loads interactive digital menu without app installation."
+      },
+      {
+        "id": "kitchen-dispatch",
+        "label": "2. Kitchen Ticket Dispatch",
+        "focus": ["customer", "edge", "order_engine", "kitchen_kds"],
+        "note": "Cart is authoritatively priced server-side and dispatched instantly to kitchen display stations."
+      },
+      {
+        "id": "billing-closure",
+        "label": "3. Checkout & Settlement",
+        "focus": ["customer", "edge", "billing_core", "payment_gw"],
+        "note": "Itemized bill is settled via digital payment provider, closing session with instant digital receipt."
+      }
+    ]
+  },
+  "participants": [
+    { "id": "customer", "type": "external", "label": "Customer", "sublabel": "Mobile Web (PWA)" },
+    { "id": "edge", "type": "cloud", "label": "Edge Gateway", "sublabel": "Secure Ingress" },
+    { "id": "order_engine", "type": "backend", "label": "FODQ Platform", "sublabel": "Order & Session Core" },
+    { "id": "kitchen_kds", "type": "frontend", "label": "Kitchen KDS", "sublabel": "Line Cook Display" },
+    { "id": "billing_core", "type": "backend", "label": "Billing Engine", "sublabel": "Fiscal Authority" },
+    { "id": "payment_gw", "type": "external", "label": "Payment Provider", "sublabel": "Razorpay" }
+  ],
+  "segments": [
+    { "from": 150, "to": 390, "label": "Table Discovery & Interactive Menu" },
+    { "from": 405, "to": 650, "label": "Authoritative Order Placement & Kitchen Dispatch" },
+    { "from": 665, "to": 880, "label": "Digital Bill Checkout & Instant Settlement" }
+  ],
+  "messages": [
+    { "from": "customer", "to": "edge", "y": 180, "label": "Scan table QR code", "variant": "emphasis" },
+    { "from": "edge", "to": "order_engine", "y": 220, "label": "Resolve venue & table", "variant": "emphasis" },
+    { "from": "order_engine", "to": "edge", "y": 260, "label": "Return digital catalog", "variant": "return" },
+    { "from": "edge", "to": "customer", "y": 300, "label": "Display menu & filters", "variant": "return" },
+    { "from": "customer", "to": "edge", "y": 350, "label": "Customize modifiers & cart", "variant": "default" },
+    { "from": "customer", "to": "edge", "y": 430, "label": "Submit table order", "variant": "emphasis" },
+    { "from": "edge", "to": "order_engine", "y": 470, "label": "Validate stock & recalculate prices", "variant": "emphasis" },
+    { "from": "order_engine", "to": "kitchen_kds", "y": 510, "label": "Push live kitchen ticket", "variant": "emphasis" },
+    { "from": "kitchen_kds", "to": "order_engine", "y": 550, "label": "Chef updates prep status", "variant": "default" },
+    { "from": "order_engine", "to": "customer", "y": 590, "label": "Live preparation update", "variant": "return" },
+    { "from": "kitchen_kds", "to": "order_engine", "y": 630, "label": "Ticket marked SERVED", "variant": "default" },
+    { "from": "customer", "to": "edge", "y": 690, "label": "Request table bill", "variant": "emphasis" },
+    { "from": "edge", "to": "billing_core", "y": 730, "label": "Generate itemized tax invoice", "variant": "emphasis" },
+    { "from": "billing_core", "to": "payment_gw", "y": 770, "label": "Create digital payment order", "variant": "emphasis" },
+    { "from": "payment_gw", "to": "billing_core", "y": 810, "label": "Payment captured webhook", "variant": "return" },
+    { "from": "billing_core", "to": "customer", "y": 850, "label": "Digital receipt & table freed", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "customer", "from": 170, "to": 310 },
+    { "participant": "order_engine", "from": 210, "to": 270 },
+    { "participant": "customer", "from": 420, "to": 600 },
+    { "participant": "order_engine", "from": 460, "to": 520 },
+    { "participant": "kitchen_kds", "from": 500, "to": 640 },
+    { "participant": "customer", "from": 680, "to": 860 },
+    { "participant": "billing_core", "from": 720, "to": 860 },
+    { "participant": "payment_gw", "from": 760, "to": 820 }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Zero-Install Customer Speed",
+      "items": [
+        "Eliminates app store downloads: diners immediately view the full digital menu",
+        "Rich photo menus with category navigation, modifier add-ons, and allergen warnings",
+        "Multiple diners at the same table can browse and add items simultaneously"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Frictionless Kitchen Routing",
+      "items": [
+        "Kitchen tickets route automatically to relevant preparation stations",
+        "Clear visual timers on KDS prevent ticket delays during peak dining rushes",
+        "Customers observe real-time status updates as their dishes are prepared"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Integrated Digital Reconciliation",
+      "items": [
+        "Instant checkout supports popular UPI payment apps, credit/debit cards, and netbanking",
+        "Server-authoritative billing prevents tampering with line-item discounts or tax sums",
+        "Instant PDF/mobile receipts delivered with zero paper waste"
+      ]
+    }
+  ]
+}

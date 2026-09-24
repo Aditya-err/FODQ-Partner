@@ -1,0 +1,100 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "FODQ Restaurant Partner & Operations Workflow",
+    "subtitle": "High-level operational workflow for restaurateurs, kitchen supervisors, and floor cashiers",
+    "output": "docs/architecture/restaurant-workflow.html",
+    "viewBox": [1080, 680],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "partner-mainline",
+        "label": "Full Restaurant Operations",
+        "focus": ["partner_onboarding", "floor_layout", "qr_generator", "qr_print_export", "cashier_settle", "sales_analytics"],
+        "note": "Follow restaurant operations from initial digital onboarding to floor management and financial analytics."
+      },
+      {
+        "id": "catalog-and-kitchen",
+        "label": "Menu & KDS Dispatch",
+        "focus": ["digital_catalog", "kds_orchestration", "cashier_settle"],
+        "note": "Visual catalog authoring with real-time dispatch to kitchen line displays."
+      },
+      {
+        "id": "floor-and-settlement",
+        "label": "Table QR & Cashier Settlement",
+        "focus": ["floor_layout", "qr_generator", "qr_print_export", "cashier_settle", "sales_analytics"],
+        "note": "QR stand generation, cashier bill management, and daily sales metrics."
+      }
+    ]
+  },
+  "lanes": [
+    { "id": "partner_governance", "label": "Management & Configuration" },
+    { "id": "floor_provisioning", "label": "Floor & QR Infrastructure" },
+    { "id": "service_operations", "label": "Catalog & KDS Dispatch" },
+    { "id": "finance_metrics", "label": "Cashier & Revenue Insights" }
+  ],
+  "phases": [
+    { "id": "phase_setup", "label": "1. Onboarding & Floor Layout", "fromCol": 0, "toCol": 1 },
+    { "id": "phase_deploy", "label": "2. QR & Menu Deployment", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "phase_insights", "label": "3. Service, Cashier & Analytics", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "groups": [
+    { "id": "grp_onboarding", "label": "Venue Setup", "lane": "partner_governance", "fromCol": 0, "toCol": 1 },
+    { "id": "grp_qr_floor", "label": "Physical Presence", "lane": "floor_provisioning", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "grp_service", "label": "Real-Time Prep", "lane": "service_operations", "fromCol": 2, "toCol": 3, "variant": "dashed" },
+    { "id": "grp_finance", "label": "Fiscal Intelligence", "lane": "finance_metrics", "fromCol": 4, "toCol": 5, "variant": "emphasis" }
+  ],
+  "mainPath": ["partner_onboarding", "floor_layout", "qr_generator", "qr_print_export", "cashier_settle", "sales_analytics"],
+  "nodes": [
+    { "id": "partner_onboarding", "lane": "partner_governance", "col": 0, "type": "security", "label": "Venue Profile", "sublabel": "branding, taxes & hours", "width": 132 },
+    { "id": "floor_layout", "lane": "partner_governance", "col": 1, "type": "backend", "label": "Floor Configuration", "sublabel": "table seating & sections", "width": 132 },
+    { "id": "qr_generator", "lane": "floor_provisioning", "col": 2, "type": "backend", "label": "Dynamic QR Engine", "sublabel": "high-res vector tokens", "width": 132 },
+    { "id": "digital_catalog", "lane": "service_operations", "col": 2, "type": "backend", "label": "Visual Menu Editor", "sublabel": "items, pricing, addons", "width": 132 },
+    { "id": "qr_print_export", "lane": "floor_provisioning", "col": 3, "type": "frontend", "label": "Table QR Export", "sublabel": "print-ready PDF stickers", "width": 132 },
+    { "id": "kds_orchestration", "lane": "service_operations", "col": 3, "type": "messagebus", "label": "Kitchen Stations", "sublabel": "live ticket distribution", "width": 132 },
+    { "id": "cashier_settle", "lane": "finance_metrics", "col": 4, "type": "backend", "label": "Cashier & Bill Desk", "sublabel": "split bills, cash & UPI", "width": 132 },
+    { "id": "sales_analytics", "lane": "finance_metrics", "col": 5, "type": "database", "label": "Sales Analytics", "sublabel": "turnover & revenue metrics", "width": 132 }
+  ],
+  "edges": [
+    { "id": "e-onboard-floor", "from": "partner_onboarding", "to": "floor_layout", "variant": "default" },
+    { "id": "e-floor-qr", "from": "floor_layout", "to": "qr_generator", "variant": "emphasis" },
+    { "id": "e-floor-catalog", "from": "floor_layout", "to": "digital_catalog", "variant": "dashed" },
+    { "id": "e-qr-print", "from": "qr_generator", "to": "qr_print_export", "variant": "default" },
+    { "id": "e-catalog-kds", "from": "digital_catalog", "to": "kds_orchestration", "variant": "default" },
+    { "id": "e-print-settle", "from": "qr_print_export", "to": "cashier_settle", "variant": "emphasis" },
+    { "id": "e-kds-settle", "from": "kds_orchestration", "to": "cashier_settle", "variant": "dashed" },
+    { "id": "e-settle-analytics", "from": "cashier_settle", "to": "sales_analytics", "variant": "emphasis" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Rapid Restaurant Onboarding",
+      "items": [
+        "Configurable venue profile with customized tax structures and service hours",
+        "Intuitive table layout designer supporting dining rooms, patios, and bar seating",
+        "One-click generation of durable table QRs with individual table identifiers"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Kitchen & Service Efficiency",
+      "items": [
+        "Interactive menu builder with dynamic 86'd out-of-stock item toggling",
+        "Direct routing of appetizer, entrée, and drink tickets to dedicated stations",
+        "Reduced wait times and eliminated order transcription miscommunications"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Revenue Growth & Accounting",
+      "items": [
+        "Integrated cashier station supports split checks, tips, and multiple payment methods",
+        "Automated reconciliation with digital payment providers and tax accounting",
+        "Actionable analytics on top-selling dishes, peak rush hours, and table turnover rates"
+      ]
+    }
+  ]
+}

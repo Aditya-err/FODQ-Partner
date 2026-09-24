@@ -1,0 +1,99 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "FODQ Customer Journey - Scan. Order. Dine.",
+    "subtitle": "Step-by-step guest experience from table arrival and visual menu discovery to live preparation and digital checkout",
+    "output": "docs/architecture/customer-journey.html",
+    "viewBox": [1080, 680],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "full-journey",
+        "label": "Complete Customer Journey",
+        "focus": ["qr_scan", "table_welcome", "menu_explore", "item_customize", "order_placed", "digital_checkout"],
+        "note": "Follow the end-to-end guest journey across discovery, ordering, and payment."
+      },
+      {
+        "id": "ordering-experience",
+        "label": "Menu & Order Customization",
+        "focus": ["menu_explore", "item_customize", "order_placed"],
+        "note": "Interactive dish selection, variant configuration, and instant kitchen ticket dispatch."
+      },
+      {
+        "id": "checkout-and-receipt",
+        "label": "Settlement & Receipt",
+        "focus": ["order_placed", "digital_checkout", "digital_receipt"],
+        "note": "Frictionless digital payment via UPI/Cards and immediate digital receipt delivery."
+      }
+    ]
+  },
+  "lanes": [
+    { "id": "arrival_lane", "label": "Arrival & Table Presence" },
+    { "id": "catalog_lane", "label": "Digital Menu & Selection" },
+    { "id": "kitchen_lane", "label": "Order & Kitchen Tracking" },
+    { "id": "payment_lane", "label": "Payment & Receipts" }
+  ],
+  "phases": [
+    { "id": "phase_discover", "label": "1. Scan & Enter", "fromCol": 0, "toCol": 1 },
+    { "id": "phase_selection", "label": "2. Browse & Order", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "phase_experience", "label": "3. Kitchen & Settle", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "groups": [
+    { "id": "grp_arrival", "label": "Zero-Install Entry", "lane": "arrival_lane", "fromCol": 0, "toCol": 1 },
+    { "id": "grp_catalog", "label": "Visual Ordering", "lane": "catalog_lane", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "grp_kitchen", "label": "Live Line Status", "lane": "kitchen_lane", "fromCol": 4, "toCol": 5, "variant": "dashed" },
+    { "id": "grp_checkout", "label": "Digital Ledger", "lane": "payment_lane", "fromCol": 4, "toCol": 5, "variant": "emphasis" }
+  ],
+  "mainPath": ["qr_scan", "table_welcome", "menu_explore", "item_customize", "order_placed", "digital_checkout"],
+  "nodes": [
+    { "id": "qr_scan", "lane": "arrival_lane", "col": 0, "type": "external", "label": "Scan Table QR", "sublabel": "native camera / browser", "width": 132 },
+    { "id": "table_welcome", "lane": "arrival_lane", "col": 1, "type": "frontend", "label": "Restaurant Landing", "sublabel": "table verified & bound", "width": 132 },
+    { "id": "menu_explore", "lane": "catalog_lane", "col": 2, "type": "frontend", "label": "Visual Menu", "sublabel": "categories & dietary tags", "width": 132 },
+    { "id": "item_customize", "lane": "catalog_lane", "col": 3, "type": "frontend", "label": "Custom Modifiers", "sublabel": "variants, spice & addons", "width": 132 },
+    { "id": "order_placed", "lane": "kitchen_lane", "col": 4, "type": "messagebus", "label": "Order Dispatched", "sublabel": "sent directly to KDS", "width": 132 },
+    { "id": "live_prep", "lane": "kitchen_lane", "col": 5, "type": "frontend", "label": "Live Status Board", "sublabel": "Accepted -> Cook -> Ready", "width": 132 },
+    { "id": "digital_checkout", "lane": "payment_lane", "col": 5, "type": "backend", "label": "Instant Checkout", "sublabel": "UPI / card / netbanking", "width": 132 },
+    { "id": "digital_receipt", "lane": "arrival_lane", "col": 5, "type": "database", "label": "Digital Receipt", "sublabel": "PDF / SMS summary", "width": 132 }
+  ],
+  "edges": [
+    { "id": "e-scan-welcome", "from": "qr_scan", "to": "table_welcome", "variant": "default" },
+    { "id": "e-welcome-menu", "from": "table_welcome", "to": "menu_explore", "variant": "emphasis" },
+    { "id": "e-menu-custom", "from": "menu_explore", "to": "item_customize", "variant": "default" },
+    { "id": "e-custom-order", "from": "item_customize", "to": "order_placed", "variant": "emphasis" },
+    { "id": "e-order-prep", "from": "order_placed", "to": "live_prep", "variant": "dashed" },
+    { "id": "e-order-checkout", "from": "order_placed", "to": "digital_checkout", "variant": "emphasis" },
+    { "id": "e-checkout-receipt", "from": "digital_checkout", "to": "digital_receipt", "variant": "default", "fromSide": "top", "toSide": "bottom" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Instant Table Ingress",
+      "items": [
+        "Zero friction: guests scan the physical table QR code with standard phone camera",
+        "Loads lightweight progressive web application in under 2 seconds without app download",
+        "Displays real-time restaurant branding, table number, and current service availability"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Interactive Food Discovery",
+      "items": [
+        "Vibrant high-resolution imagery, detailed descriptions, and transparent ingredient labels",
+        "Customizable addon options: portion size, spice level, allergen exclusions, and extras",
+        "Real-time 86'd inventory status prevents ordering out-of-stock kitchen items"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Live Status & Rapid Settlement",
+      "items": [
+        "Diners track real-time kitchen progress without waving down floor waitstaff",
+        "Instant digital checkout supports UPI, debit/credit cards, and cash split options",
+        "Eco-friendly paperless digital invoice stored permanently for guest expense tracking"
+      ]
+    }
+  ]
+}

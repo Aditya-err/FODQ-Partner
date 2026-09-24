@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "FODQ Platform - High-Level System Architecture",
+    "subtitle": "Sanitized architectural overview of the QR-first restaurant operating system",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "customer-path",
+        "label": "1. Customer QR Order Path",
+        "focus": ["customer_web", "customer_app", "gateway", "order_engine", "billing_engine", "payment_gw"],
+        "note": "Follow the zero-install flow from QR scan and cart submission to digital settlement."
+      },
+      {
+        "id": "kitchen-and-floor",
+        "label": "2. Kitchen & Floor Operations",
+        "focus": ["owner_portal", "kitchen_kds", "gateway", "realtime_hub", "order_engine"],
+        "note": "Real-time ticket dispatch and live kitchen preparation updates."
+      },
+      {
+        "id": "platform-persistence",
+        "label": "3. Platform Data & Cloud Services",
+        "focus": ["order_engine", "platform_db", "cloud_cdn", "payment_gw"],
+        "note": "Multi-tenant persistence, media distribution, and payment provider integrations."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "customer_web",
+      "type": "frontend",
+      "label": "Customer Web App",
+      "sublabel": "Zero-install mobile browser",
+      "tag": "Next.js PWA",
+      "pos": [40, 60],
+      "size": [140, 60]
+    },
+    {
+      "id": "customer_app",
+      "type": "frontend",
+      "label": "Customer Native App",
+      "sublabel": "Mobile client",
+      "tag": "Flutter Android / iOS",
+      "pos": [40, 160],
+      "size": [140, 60]
+    },
+    {
+      "id": "owner_portal",
+      "type": "frontend",
+      "label": "Partner Portal",
+      "sublabel": "Menu & management console",
+      "tag": "Admin Web / Mobile",
+      "pos": [40, 310],
+      "size": [140, 60]
+    },
+    {
+      "id": "kitchen_kds",
+      "type": "frontend",
+      "label": "Kitchen KDS",
+      "sublabel": "Live kitchen tablet board",
+      "tag": "KDS Screen",
+      "pos": [40, 410],
+      "size": [140, 60]
+    },
+    {
+      "id": "gateway",
+      "type": "cloud",
+      "label": "API Edge Gateway",
+      "sublabel": "Secure ingress & routing",
+      "tag": "HTTPS Gateway",
+      "pos": [250, 235],
+      "size": [140, 64]
+    },
+    {
+      "id": "order_engine",
+      "type": "backend",
+      "label": "Order & Menu Core",
+      "sublabel": "Authoritative validation",
+      "tag": "Core Service",
+      "pos": [460, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "realtime_hub",
+      "type": "messagebus",
+      "label": "Realtime Event Hub",
+      "sublabel": "Status & ticket pub/sub",
+      "tag": "Event Sync",
+      "pos": [460, 235],
+      "size": [140, 64]
+    },
+    {
+      "id": "billing_engine",
+      "type": "backend",
+      "label": "Billing Engine",
+      "sublabel": "Taxes, invoices & receipts",
+      "tag": "Fiscal Authority",
+      "pos": [460, 390],
+      "size": [140, 64]
+    },
+    {
+      "id": "cloud_cdn",
+      "type": "cloud",
+      "label": "Cloud Asset CDN",
+      "sublabel": "Optimized food photography",
+      "tag": "Global CDN",
+      "pos": [740, 90],
+      "size": [140, 64]
+    },
+    {
+      "id": "platform_db",
+      "type": "database",
+      "label": "Platform Database",
+      "sublabel": "Multi-tenant persistence",
+      "tag": "Transactional DB",
+      "pos": [740, 235],
+      "size": [140, 64]
+    },
+    {
+      "id": "payment_gw",
+      "type": "external",
+      "label": "Payment Provider",
+      "sublabel": "UPI, Cards & NetBanking",
+      "tag": "Razorpay Gateway",
+      "pos": [740, 390],
+      "size": [140, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Customer Experience Layer",
+      "wraps": ["customer_web", "customer_app"],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "Restaurant Floor & Kitchen Operations",
+      "wraps": ["owner_portal", "kitchen_kds"],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "FODQ Platform Core Services",
+      "wraps": ["order_engine", "realtime_hub", "billing_engine"],
+      "pad": 18
+    },
+    {
+      "kind": "region",
+      "label": "Cloud Infrastructure & External Partners",
+      "wraps": ["cloud_cdn", "platform_db", "payment_gw"],
+      "pad": 16
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn_web_gw",
+      "from": "customer_web",
+      "to": "gateway",
+      "label": "QR scan & orders",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "top"
+    },
+    {
+      "id": "conn_app_gw",
+      "from": "customer_app",
+      "to": "gateway",
+      "label": "mobile API",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "conn_owner_gw",
+      "from": "owner_portal",
+      "to": "gateway",
+      "label": "admin actions",
+      "variant": "security",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": 20
+    },
+    {
+      "id": "conn_kds_gw",
+      "from": "kitchen_kds",
+      "to": "gateway",
+      "label": "KDS ticket updates",
+      "fromSide": "right",
+      "toSide": "bottom"
+    },
+    {
+      "id": "conn_gw_hub",
+      "from": "gateway",
+      "to": "realtime_hub",
+      "label": "proxy dispatch",
+      "variant": "emphasis",
+      "labelDy": -30
+    },
+    {
+      "id": "conn_hub_order",
+      "from": "realtime_hub",
+      "to": "order_engine",
+      "label": "order dispatch",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDy": -35
+    },
+    {
+      "id": "conn_hub_billing",
+      "from": "realtime_hub",
+      "to": "billing_engine",
+      "label": "bill sync",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 35
+    },
+    {
+      "id": "conn_order_cdn",
+      "from": "order_engine",
+      "to": "cloud_cdn",
+      "label": "asset URLs",
+      "variant": "dashed"
+    },
+    {
+      "id": "conn_order_db",
+      "from": "order_engine",
+      "to": "platform_db",
+      "label": "durable state",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "top"
+    },
+    {
+      "id": "conn_bill_pay",
+      "from": "billing_engine",
+      "to": "payment_gw",
+      "label": "digital checkout",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Customer Zero-Install Journey",
+      "items": [
+        "Immediate menu access upon QR scan without requiring app installation",
+        "Dynamic cart with variant modifiers, add-ons, and dietary filtering",
+        "Authoritative pricing recalculated server-side for fiscal accuracy"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Kitchen Display & Floor Synchronization",
+      "items": [
+        "Orders instantly dispatch to Kitchen Display System (KDS) stations",
+        "Line cooks update prep status from Accepted -> Preparing -> Ready -> Served",
+        "Realtime WebSocket synchronization updates customer screen automatically"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Partner Governance & Reconciliation",
+      "items": [
+        "Multi-table layout management with dynamic QR generation and rotation",
+        "Seamless digital checkout via Razorpay with automated webhook capture",
+        "Comprehensive operational reports, table turnover metrics, and audit logs"
+      ]
+    }
+  ]
+}
