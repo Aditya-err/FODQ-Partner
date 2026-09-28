@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Authentication & Role-Based Access Control (RBAC)",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "login-mfa",
+        "label": "1. Login & MFA Verification",
+        "focus": ["owner_client", "edge", "auth_engine", "user_db", "session_cache"],
+        "note": "Credentials verified against bcrypt hashes, OTP validated, and device session registered."
+      },
+      {
+        "id": "token-issuance",
+        "label": "2. Session Registry & JWT",
+        "focus": ["auth_engine", "session_cache", "owner_client"],
+        "note": "Issues 60-min access token and 7-day refresh token tied to active server-side session."
+      },
+      {
+        "id": "rbac-enforcement",
+        "label": "3. Tenant & Permission Guard",
+        "focus": ["owner_client", "edge", "auth_engine", "user_db"],
+        "note": "Every request checks active session validity and enforces tenant isolation with granular scopes."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "owner_client",
+      "type": "frontend",
+      "label": "Staff & Owner App",
+      "sublabel": "Flutter & Web Dashboard",
+      "tag": "Bearer Auth",
+      "pos": [40, 160],
+      "size": [140, 64]
+    },
+    {
+      "id": "edge",
+      "type": "cloud",
+      "label": "Edge Proxy",
+      "sublabel": "HTTPS :443",
+      "tag": "TLS Ingress",
+      "pos": [260, 160],
+      "size": [130, 64]
+    },
+    {
+      "id": "auth_engine",
+      "type": "security",
+      "label": "FastAPI Auth Engine",
+      "sublabel": "JWT, Bcrypt & RBAC",
+      "tag": "Security Authority",
+      "pos": [480, 160],
+      "size": [150, 64]
+    },
+    {
+      "id": "session_cache",
+      "type": "database",
+      "label": "Redis Sessions",
+      "sublabel": "Active Devices & Revocation",
+      "tag": "Instant Lockout",
+      "pos": [740, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "user_db",
+      "type": "database",
+      "label": "PostgreSQL DB",
+      "sublabel": "users, roles, permissions",
+      "tag": "ACID Store",
+      "pos": [740, 240],
+      "size": [140, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Staff Client Boundary",
+      "wraps": ["owner_client"],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "FastAPI Security & RBAC Enforcement",
+      "wraps": ["auth_engine"],
+      "pad": 18
+    },
+    {
+      "kind": "security-group",
+      "label": "Identity & Session Persistence Tier",
+      "wraps": ["session_cache", "user_db"],
+      "pad": 16
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn_client_edge",
+      "from": "owner_client",
+      "to": "edge",
+      "label": "HTTPS auth",
+      "variant": "emphasis"
+    },
+    {
+      "id": "conn_edge_auth",
+      "from": "edge",
+      "to": "auth_engine",
+      "label": "login & verify",
+      "variant": "security"
+    },
+    {
+      "id": "conn_auth_session",
+      "from": "auth_engine",
+      "to": "session_cache",
+      "label": "session keys",
+      "variant": "emphasis"
+    },
+    {
+      "id": "conn_auth_db",
+      "from": "auth_engine",
+      "to": "user_db",
+      "label": "bcrypt & roles",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Strict Credential Security",
+      "items": [
+        "Passwords hashed using Bcrypt with salt; plain text never persisted or logged",
+        "Optional 2FA/MFA via SMS/Email OTP before session token release",
+        "Trusted device fingerprinting tracks authorized hardware sessions"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Fine-Grained RBAC & Tenant Isolation",
+      "items": [
+        "Granular permissions: manage_tables, manage_menu, manage_orders, view_analytics",
+        "Multi-tenant isolation: requests validate X-Restaurant-ID and enforce database tenant scoping",
+        "Prevents BOLA (Broken Object Level Auth) and IDOR attacks completely"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Instant Session Revocation",
+      "items": [
+        "Every JWT carries a unique session_id verified against the database and Redis cache",
+        "Logout all devices instantly revokes session keys across web and mobile apps",
+        "Inactivity timeout forces re-authentication to protect unattended cashier screens"
+      ]
+    }
+  ]
+}

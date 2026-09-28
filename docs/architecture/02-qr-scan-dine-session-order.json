@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "QR Scan to Dine Session & Order Flow",
+    "viewBox": [900, 940],
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "qr-verification",
+        "label": "1. Cryptographic QR Verification",
+        "focus": ["customer", "edge", "api", "auth", "postgres"],
+        "note": "Raw token is securely verified against the table secret hash before opening a session."
+      },
+      {
+        "id": "menu-fetch",
+        "label": "2. High-Performance Menu Cache",
+        "focus": ["customer", "api", "redis"],
+        "note": "Active catalog is retrieved from Redis cache to prevent database load spikes."
+      },
+      {
+        "id": "authoritative-order",
+        "label": "3. Server-Side Order Authority",
+        "focus": ["customer", "api", "postgres", "redis"],
+        "note": "Prices are recalculated strictly on the backend, saved in PostgreSQL, and broadcast over Redis."
+      }
+    ]
+  },
+  "participants": [
+    { "id": "customer", "type": "external", "label": "Customer", "sublabel": "Mobile Web / App" },
+    { "id": "edge", "type": "cloud", "label": "Edge Proxy", "sublabel": "HTTPS :443" },
+    { "id": "api", "type": "backend", "label": "Dine API", "sublabel": "FastAPI :8000" },
+    { "id": "auth", "type": "security", "label": "QR Verifier", "sublabel": "HMAC Hash Check" },
+    { "id": "postgres", "type": "database", "label": "PostgreSQL", "sublabel": "Durable Tables" },
+    { "id": "redis", "type": "database", "label": "Redis 7", "sublabel": "Pub/Sub & Cache" }
+  ],
+  "segments": [
+    { "from": 150, "to": 440, "label": "Physical Presence Proof & Session Validation" },
+    { "from": 455, "to": 620, "label": "Menu Exploration" },
+    { "from": 635, "to": 850, "label": "Server-Authoritative Order Placement" }
+  ],
+  "messages": [
+    { "from": "customer", "to": "edge", "y": 180, "label": "POST /api/v1/dine/scan", "variant": "emphasis" },
+    { "from": "edge", "to": "api", "y": 220, "label": "forward qr_raw_token", "variant": "emphasis" },
+    { "from": "api", "to": "auth", "y": 260, "label": "verify secret hash", "variant": "security" },
+    { "from": "auth", "to": "api", "y": 300, "label": "valid table presence", "variant": "return" },
+    { "from": "api", "to": "postgres", "y": 340, "label": "get or create DineSession", "variant": "emphasis" },
+    { "from": "postgres", "to": "api", "y": 380, "label": "session record (ACTIVE)", "variant": "return" },
+    { "from": "api", "to": "customer", "y": 420, "label": "200 OK + session cookie", "variant": "return" },
+    { "from": "customer", "to": "api", "y": 480, "label": "GET /api/v1/dine/menu", "variant": "default" },
+    { "from": "api", "to": "redis", "y": 520, "label": "fetch cached catalog", "variant": "default" },
+    { "from": "redis", "to": "api", "y": 560, "label": "menu categories & items", "variant": "return" },
+    { "from": "api", "to": "customer", "y": 600, "label": "200 OK (menu data)", "variant": "return" },
+    { "from": "customer", "to": "api", "y": 660, "label": "POST /api/v1/dine/orders", "variant": "emphasis" },
+    { "from": "api", "to": "postgres", "y": 700, "label": "verify prices & save Order", "variant": "emphasis" },
+    { "from": "postgres", "to": "api", "y": 740, "label": "order saved (PLACED)", "variant": "return" },
+    { "from": "api", "to": "redis", "y": 780, "label": "publish order.new event", "variant": "dashed" },
+    { "from": "api", "to": "customer", "y": 820, "label": "201 Created + order details", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "api", "from": 215, "to": 425, "type": "backend" },
+    { "participant": "auth", "from": 255, "to": 305, "type": "security" },
+    { "participant": "postgres", "from": 335, "to": 385, "type": "database" },
+    { "participant": "api", "from": 475, "to": 605, "type": "backend" },
+    { "participant": "redis", "from": 515, "to": 565, "type": "database" },
+    { "participant": "api", "from": 655, "to": 825, "type": "backend" },
+    { "participant": "postgres", "from": 695, "to": 745, "type": "database" },
+    { "participant": "redis", "from": 775, "to": 795, "type": "database" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Physical Presence Security",
+      "items": [
+        "Raw QR token contains a high-entropy secret verified against table.qr_secret_hash",
+        "Tokens are cryptographically rotated on demand without database schema alteration",
+        "Zero dependency on restaurant Wi-Fi or LAN IP matching"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "DineSession Lifecycle",
+      "items": [
+        "A verified scan attaches the customer to an existing table session or creates an active one",
+        "Multiple guests at the same table share the single active DineSession securely",
+        "Sessions persist across browser refreshes and cellular network handovers"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Server-Side Pricing Authority",
+      "items": [
+        "Client cart totals are treated as advisory; backend recomputes every line item price",
+        "Order items and selected modifiers are snapshotted in PostgreSQL at the moment of order",
+        "Redis broadcasts order notifications in real time to kitchen display screens"
+      ]
+    }
+  ]
+}

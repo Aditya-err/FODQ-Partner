@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Billing to Razorpay Webhook & Payment Closure Flow",
+    "viewBox": [900, 980],
+    "column_fit": "spread",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "bill-calculation",
+        "label": "1. Server-Side Bill Calculation",
+        "focus": ["customer", "edge", "api", "postgres"],
+        "note": "Subtotal, tax, and discount rules are strictly evaluated on the server from confirmed orders."
+      },
+      {
+        "id": "razorpay-checkout",
+        "label": "2. Secure Payment Checkout",
+        "focus": ["customer", "api", "razorpay"],
+        "note": "FastAPI creates an order on Razorpay and returns the order_id for customer client-side checkout."
+      },
+      {
+        "id": "webhook-closure",
+        "label": "3. Webhook Signature & Session Closure",
+        "focus": ["razorpay", "edge", "webhook", "postgres"],
+        "note": "HMAC SHA-256 webhook signature verified, bill marked PAID, session closed, and table released."
+      }
+    ]
+  },
+  "participants": [
+    { "id": "customer", "type": "external", "label": "Customer", "sublabel": "Mobile Web" },
+    { "id": "edge", "type": "cloud", "label": "Edge Proxy", "sublabel": "HTTPS :443" },
+    { "id": "api", "type": "backend", "label": "Billing API", "sublabel": "FastAPI :8000" },
+    { "id": "razorpay", "type": "external", "label": "Razorpay", "sublabel": "Payment Gateway" },
+    { "id": "webhook", "type": "security", "label": "Webhooks", "sublabel": "HMAC Receiver" },
+    { "id": "postgres", "type": "database", "label": "PostgreSQL", "sublabel": "ACID Store" }
+  ],
+  "segments": [
+    { "from": 150, "to": 440, "label": "Server-Side Invoicing & Tax Computation" },
+    { "from": 455, "to": 655, "label": "Payment Initiation & Checkout" },
+    { "from": 670, "to": 890, "label": "Cryptographic Webhook & Table Release" }
+  ],
+  "messages": [
+    { "from": "customer", "to": "edge", "y": 180, "label": "POST /api/v1/dine/bill", "variant": "emphasis" },
+    { "from": "edge", "to": "api", "y": 220, "label": "request bill calculation", "variant": "emphasis" },
+    { "from": "api", "to": "postgres", "y": 260, "label": "aggregate confirmed orders", "variant": "default" },
+    { "from": "postgres", "to": "api", "y": 300, "label": "order items & subtotal", "variant": "return" },
+    { "from": "api", "to": "postgres", "y": 340, "label": "insert Bill (PENDING)", "variant": "emphasis" },
+    { "from": "postgres", "to": "api", "y": 380, "label": "bill id & total", "variant": "return" },
+    { "from": "api", "to": "customer", "y": 420, "label": "200 OK + bill summary", "variant": "return" },
+    { "from": "customer", "to": "api", "y": 480, "label": "POST /api/v1/dine/payment", "variant": "emphasis" },
+    { "from": "api", "to": "razorpay", "y": 520, "label": "create payment order", "variant": "emphasis" },
+    { "from": "razorpay", "to": "api", "y": 560, "label": "order_id + razorpay_key", "variant": "return" },
+    { "from": "api", "to": "customer", "y": 600, "label": "launch checkout modal", "variant": "return" },
+    { "from": "customer", "to": "razorpay", "y": 640, "label": "authorize payment (UPI/Card)", "variant": "emphasis" },
+    { "from": "razorpay", "to": "edge", "y": 690, "label": "POST /api/v1/webhook/razorpay", "variant": "security" },
+    { "from": "edge", "to": "webhook", "y": 730, "label": "forward signed payload", "variant": "security" },
+    { "from": "webhook", "to": "postgres", "y": 780, "label": "verify HMAC & mark PAID", "variant": "emphasis" },
+    { "from": "postgres", "to": "webhook", "y": 820, "label": "table status AVAILABLE", "variant": "return" },
+    { "from": "webhook", "to": "razorpay", "y": 860, "label": "200 OK (ack received)", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "api", "from": 215, "to": 425, "type": "backend" },
+    { "participant": "postgres", "from": 255, "to": 385, "type": "database" },
+    { "participant": "api", "from": 475, "to": 605, "type": "backend" },
+    { "participant": "razorpay", "from": 515, "to": 565, "type": "external" },
+    { "participant": "razorpay", "from": 635, "to": 695, "type": "external" },
+    { "participant": "webhook", "from": 725, "to": 865, "type": "security" },
+    { "participant": "postgres", "from": 775, "to": 825, "type": "database" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Never Trust the Client",
+      "items": [
+        "Payment success is never asserted from the client browser or mobile app",
+        "FastAPI only marks a bill PAID after receiving and verifying the official Razorpay webhook",
+        "Missing or mismatched X-Razorpay-Signature immediately aborts the transaction"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Idempotent Webhook Processing",
+      "items": [
+        "Every event_id is recorded in the webhook_events PostgreSQL table before processing",
+        "Duplicate webhook deliveries from Razorpay return 200 OK without re-executing business logic",
+        "Database rollback on transient failures triggers Razorpay retry safely"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Clean Session & Table Teardown",
+      "items": [
+        "When bill payment is verified, DineSession transitions from BILLED to CLOSED",
+        "Table status transitions from BILLING to AVAILABLE, immediately ready for next party",
+        "Audit log records full payment metadata and revenue metrics"
+      ]
+    }
+  ]
+}

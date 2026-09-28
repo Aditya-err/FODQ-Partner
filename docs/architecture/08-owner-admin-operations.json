@@ -1,0 +1,103 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "FODQ Owner & Admin Operations Workflow",
+    "subtitle": "Comprehensive management operations across auth, QR provisioning, menu catalog, KDS dispatch, cashier settlement, and audit",
+    "output": "docs/archify/08-owner-admin-operations.html",
+    "viewBox": [1080, 680],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "operational-mainline",
+        "label": "Primary Operational Lifecycle",
+        "focus": ["owner_login", "tenant_config", "table_qr_gen", "qr_export", "cashier_billing", "daily_analytics"],
+        "note": "Follow the sequence from manager login and restaurant provisioning to floor QR deployment and revenue analytics."
+      },
+      {
+        "id": "catalog-and-kitchen",
+        "label": "Menu & Kitchen Coordination",
+        "focus": ["menu_editor", "kds_monitor", "cashier_billing"],
+        "note": "Observe catalog changes dynamically reflected in KDS kitchen displays and authoritative billing."
+      },
+      {
+        "id": "governance-and-audit",
+        "label": "RBAC & Tamper-Evident Audit",
+        "focus": ["tenant_config", "staff_rbac", "audit_logger", "cashier_billing"],
+        "note": "Inspect role delegation and append-only audit trail recording all staff and cashier transactions."
+      }
+    ]
+  },
+  "lanes": [
+    { "id": "owner_exec", "label": "Executive & Governance" },
+    { "id": "floor_tables", "label": "Table & QR Management" },
+    { "id": "catalog_ops", "label": "Catalog & KDS Dispatch" },
+    { "id": "finance_audit", "label": "Billing, Cashier & Analytics" }
+  ],
+  "phases": [
+    { "id": "phase_auth", "label": "1. Identity & Config", "fromCol": 0, "toCol": 1 },
+    { "id": "phase_floor", "label": "2. Floor & Catalog Setup", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "phase_settle", "label": "3. Settlement & Audit", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "groups": [
+    { "id": "grp_auth", "label": "Identity & Permissions", "lane": "owner_exec", "fromCol": 0, "toCol": 1 },
+    { "id": "grp_floor", "label": "Physical Floor Ops", "lane": "floor_tables", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "grp_kitchen", "label": "Realtime Dispatch", "lane": "catalog_ops", "fromCol": 2, "toCol": 3, "variant": "dashed" },
+    { "id": "grp_settle", "label": "Revenue & Compliance", "lane": "finance_audit", "fromCol": 4, "toCol": 5, "variant": "emphasis" }
+  ],
+  "mainPath": ["owner_login", "tenant_config", "table_qr_gen", "qr_export", "cashier_billing", "daily_analytics"],
+  "nodes": [
+    { "id": "owner_login", "lane": "owner_exec", "col": 0, "type": "security", "label": "Owner Login / MFA", "sublabel": "trusted device token", "width": 132 },
+    { "id": "tenant_config", "lane": "owner_exec", "col": 1, "type": "backend", "label": "Restaurant Profile", "sublabel": "FODQ code & settings", "width": 132 },
+    { "id": "table_qr_gen", "lane": "floor_tables", "col": 2, "type": "backend", "label": "Table & QR Setup", "sublabel": "HMAC secret & version", "width": 132 },
+    { "id": "menu_editor", "lane": "catalog_ops", "col": 2, "type": "backend", "label": "Menu & Addons", "sublabel": "items, pricing, stock", "width": 132 },
+    { "id": "qr_export", "lane": "floor_tables", "col": 3, "type": "frontend", "label": "Physical QR Prints", "sublabel": "stickers / PDF export", "width": 132 },
+    { "id": "kds_monitor", "lane": "catalog_ops", "col": 3, "type": "messagebus", "label": "Live KDS Orders", "sublabel": "realtime kitchen board", "width": 132 },
+    { "id": "staff_rbac", "lane": "owner_exec", "col": 4, "type": "security", "label": "Staff & RBAC", "sublabel": "role permissions", "width": 132 },
+    { "id": "cashier_billing", "lane": "finance_audit", "col": 4, "type": "backend", "label": "Billing & Cashier", "sublabel": "split / cash / gateway", "width": 132 },
+    { "id": "daily_analytics", "lane": "finance_audit", "col": 5, "type": "database", "label": "Daily Analytics", "sublabel": "turnover & revenue", "width": 132 },
+    { "id": "audit_logger", "lane": "owner_exec", "col": 5, "type": "database", "label": "Audit Log Trail", "sublabel": "tamper-evident log", "width": 132 }
+  ],
+  "edges": [
+    { "id": "e-login-tenant", "from": "owner_login", "to": "tenant_config", "variant": "default" },
+    { "id": "e-tenant-tables", "from": "tenant_config", "to": "table_qr_gen", "variant": "emphasis" },
+    { "id": "e-tenant-menu", "from": "tenant_config", "to": "menu_editor", "variant": "dashed" },
+    { "id": "e-tables-export", "from": "table_qr_gen", "to": "qr_export", "variant": "default" },
+    { "id": "e-menu-kds", "from": "menu_editor", "to": "kds_monitor", "variant": "default" },
+    { "id": "e-qr-billing", "from": "qr_export", "to": "cashier_billing", "variant": "emphasis" },
+    { "id": "e-kds-billing", "from": "kds_monitor", "to": "cashier_billing", "variant": "dashed" },
+    { "id": "e-billing-analytics", "from": "cashier_billing", "to": "daily_analytics", "variant": "emphasis" },
+    { "id": "e-staff-audit", "from": "staff_rbac", "to": "audit_logger", "variant": "security" },
+    { "id": "e-tenant-staff", "from": "tenant_config", "to": "staff_rbac", "variant": "security", "fromSide": "top", "toSide": "top", "route": "up-channel" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Floor & QR Lifecycle Operations",
+      "items": [
+        "Owners manage permanent restaurant identity (FODQ code, address, pickup settings)",
+        "Tables are dynamically provisioned with cryptographic QR secrets and version counters",
+        "Printable QR sticker sheets and PDFs can be generated and exported in bulk"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Live KDS & Cashier Coordination",
+      "items": [
+        "Catalog changes and 86'd stock items update instantly across customer and staff apps",
+        "Realtime KDS display monitors prep status from ticket intake to served delivery",
+        "Cashier supports split bills, Razorpay online payments, and cash drawer settlements"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Governance, RBAC & Compliance",
+      "items": [
+        "Granular RBAC restricts access across OWNER, MANAGER, CHEF, CASHIER, and WAITER roles",
+        "Tamper-evident audit trail immutably records all pricing adjustments, refunds, and logins"
+      ]
+    }
+  ]
+}

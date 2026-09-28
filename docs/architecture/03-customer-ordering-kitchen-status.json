@@ -1,0 +1,201 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Customer Ordering to Kitchen KDS Status Flow",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "order-intake",
+        "label": "1. Order Placement & KDS Ingress",
+        "focus": ["order_submit", "order_persist", "kds_notify"],
+        "note": "Customer submits cart, backend records PLACED state in DB, and Redis broadcasts ticket to kitchen."
+      },
+      {
+        "id": "kitchen-prep",
+        "label": "2. Kitchen Ticket Lifecycle",
+        "focus": ["kitchen_accept", "kitchen_prep", "kitchen_ready"],
+        "note": "Chefs accept ticket, update status to PREPARING, and mark items READY at the expediter station."
+      },
+      {
+        "id": "fulfillment",
+        "label": "3. Table Service & Tracking",
+        "focus": ["kitchen_ready", "table_serve", "customer_status"],
+        "note": "Food is delivered to table (SERVED), closing the kitchen order cycle and updating customer live tracker."
+      }
+    ]
+  },
+  "lanes": [
+    { "id": "customer", "label": "Customer Mobile Experience" },
+    { "id": "backend", "label": "FastAPI Core Authority" },
+    { "id": "kitchen", "label": "Kitchen KDS Stations" },
+    { "id": "service", "label": "Floor & Table Service" }
+  ],
+  "phases": [
+    { "id": "intake", "label": "Order Intake", "fromCol": 0, "toCol": 1 },
+    { "id": "prep", "label": "Kitchen Preparation", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "serve", "label": "Fulfillment", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "groups": [
+    { "id": "kds_group", "label": "Kitchen Display System (KDS)", "lane": "kitchen", "fromCol": 1, "toCol": 4, "variant": "emphasis" }
+  ],
+  "mainPath": ["order_submit", "order_persist", "kds_notify", "kitchen_accept", "kitchen_prep", "kitchen_ready", "table_serve", "customer_status"],
+  "nodes": [
+    {
+      "id": "order_submit",
+      "lane": "customer",
+      "col": 0,
+      "type": "frontend",
+      "label": "Submit Order",
+      "sublabel": "items & modifiers",
+      "width": 124
+    },
+    {
+      "id": "order_persist",
+      "lane": "backend",
+      "col": 1,
+      "type": "database",
+      "label": "Validate & Save",
+      "sublabel": "status: PLACED",
+      "tag": "DB write",
+      "width": 124
+    },
+    {
+      "id": "kds_notify",
+      "lane": "kitchen",
+      "col": 1,
+      "type": "messagebus",
+      "label": "KDS Alert",
+      "sublabel": "Redis pub/sub event",
+      "tag": "audio chime",
+      "width": 124
+    },
+    {
+      "id": "kitchen_accept",
+      "lane": "kitchen",
+      "col": 2,
+      "type": "backend",
+      "label": "Accept Ticket",
+      "sublabel": "status: ACCEPTED",
+      "tag": "acknowledged",
+      "width": 124
+    },
+    {
+      "id": "kitchen_prep",
+      "lane": "kitchen",
+      "col": 3,
+      "type": "backend",
+      "label": "Cook Food",
+      "sublabel": "status: PREPARING",
+      "tag": "prep timer",
+      "width": 124
+    },
+    {
+      "id": "kitchen_ready",
+      "lane": "kitchen",
+      "col": 4,
+      "type": "backend",
+      "label": "Hot Pass Ready",
+      "sublabel": "status: READY",
+      "tag": "expediter",
+      "width": 124
+    },
+    {
+      "id": "table_serve",
+      "lane": "service",
+      "col": 5,
+      "type": "external",
+      "label": "Deliver to Table",
+      "sublabel": "status: SERVED",
+      "tag": "table staff",
+      "width": 124
+    },
+    {
+      "id": "customer_status",
+      "lane": "customer",
+      "col": 5,
+      "type": "frontend",
+      "label": "Order Fulfilled",
+      "sublabel": "live tracker complete",
+      "tag": "enjoy meal",
+      "width": 124
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_submit_persist",
+      "from": "order_submit",
+      "to": "order_persist",
+      "label": "POST order",
+      "variant": "emphasis"
+    },
+    {
+      "id": "edge_persist_kds",
+      "from": "order_persist",
+      "to": "kds_notify",
+      "label": "publish",
+      "variant": "dashed"
+    },
+    {
+      "id": "edge_kds_accept",
+      "from": "kds_notify",
+      "to": "kitchen_accept",
+      "variant": "emphasis"
+    },
+    {
+      "id": "edge_accept_prep",
+      "from": "kitchen_accept",
+      "to": "kitchen_prep",
+      "variant": "emphasis"
+    },
+    {
+      "id": "edge_prep_ready",
+      "from": "kitchen_prep",
+      "to": "kitchen_ready",
+      "variant": "emphasis"
+    },
+    {
+      "id": "edge_ready_serve",
+      "from": "kitchen_ready",
+      "to": "table_serve",
+      "label": "food ready",
+      "variant": "emphasis"
+    },
+    {
+      "id": "edge_serve_status",
+      "from": "table_serve",
+      "to": "customer_status",
+      "label": "served",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Strict State Transitions",
+      "items": [
+        "Backend enforces valid transitions: PLACED → ACCEPTED → PREPARING → READY → SERVED",
+        "Out-of-order mutations are rejected with 400 Bad Request to guarantee data integrity",
+        "Every state change records an immutable timestamp in PostgreSQL"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "Realtime Kitchen Synchronization",
+      "items": [
+        "KDS receives instant order notifications over Redis pub/sub without polling delays",
+        "Items are grouped by category and station (Grill, Fryer, Salad, Dessert)",
+        "Audio chimes and visual color coding alert kitchen staff to ticket urgency"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Customer Transparency",
+      "items": [
+        "Customer Web displays an animated status tracker with real-time progression",
+        "Eliminates anxious hand-waving and asks to floor staff regarding food status",
+        "Additional orders can be appended to the same active table session seamlessly"
+      ]
+    }
+  ]
+}

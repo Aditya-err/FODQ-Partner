@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "FODQ Restaurant, Table & QR Lifecycle",
+    "subtitle": "State progression across TableStatus, DineSession tokens, and QR lifecycle from scan to table reset",
+    "output": "docs/archify/07-restaurant-table-qr-lifecycle.html",
+    "viewBox": [980, 660],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "dining-rail",
+        "label": "Dining Phase Rail",
+        "focus": ["table_available", "session_scan", "table_ordered", "table_billing", "table_settled"],
+        "note": "Follow the primary table dining track across five sequential operational states."
+      },
+      {
+        "id": "operational-holds",
+        "label": "Operational Holds & Gates",
+        "focus": ["table_ordered", "kds_prep", "order_voided", "table_billing", "razorpay_gateway", "payment_failed"],
+        "note": "Examine operational hold states during kitchen preparation and Razorpay gateway settlement."
+      },
+      {
+        "id": "qr-and-reset",
+        "label": "QR Rotation & Table Reset",
+        "focus": ["table_settled", "qr_rotation", "table_freed"],
+        "note": "Inspect QR version rotation and session cleanup resetting table to AVAILABLE for new diners."
+      }
+    ]
+  },
+  "lanes": [
+    { "id": "main", "label": "Table Dining Phases" },
+    { "id": "waiting", "label": "Kitchen & Gateway Holds" },
+    { "id": "admin", "label": "QR Security Actions" },
+    { "id": "terminal", "label": "Outcomes & Reset" }
+  ],
+  "states": [
+    { "id": "table_available", "type": "start", "label": "AVAILABLE", "sublabel": "valid QR active", "lane": "main", "col": 0, "step": "01", "tag": "ready" },
+    { "id": "session_scan", "type": "active", "label": "OCCUPIED", "sublabel": "dine session bound", "lane": "main", "col": 1, "step": "02", "tag": "scanned" },
+    { "id": "table_ordered", "type": "active", "label": "ORDERED", "sublabel": "tickets in kitchen", "lane": "main", "col": 2, "step": "03", "tag": "kitchen" },
+    { "id": "table_billing", "type": "decision", "label": "BILLING", "sublabel": "invoice generated", "lane": "main", "col": 3, "step": "04", "tag": "checkout" },
+    { "id": "table_settled", "type": "success", "label": "SETTLED", "sublabel": "payment captured", "lane": "main", "col": 4, "step": "05", "tag": "paid" },
+    { "id": "kds_prep", "type": "waiting", "label": "Kitchen Prep", "sublabel": "KDS ticket cooking", "lane": "waiting", "col": 0, "tag": "kds" },
+    { "id": "razorpay_gateway", "type": "waiting", "label": "Gateway Pending", "sublabel": "awaiting webhook", "lane": "waiting", "col": 1, "tag": "gateway" },
+    { "id": "qr_rotation", "type": "active", "label": "QR Regenerated", "sublabel": "version++ atomic", "lane": "admin", "col": 2, "tag": "security" },
+    { "id": "order_voided", "type": "failure", "label": "Order Voided", "sublabel": "cancelled by staff", "lane": "terminal", "col": 0, "tag": "void" },
+    { "id": "payment_failed", "type": "failure", "label": "Payment Failed", "sublabel": "gateway timeout", "lane": "terminal", "col": 1, "tag": "retry" },
+    { "id": "table_freed", "type": "success", "label": "Table Freed", "sublabel": "reset to AVAILABLE", "lane": "terminal", "col": 2, "tag": "cycled" }
+  ],
+  "transitions": [
+    { "id": "t-ordered-prep", "from": "table_ordered", "to": "kds_prep", "variant": "dashed", "route": "straight", "fromSide": "bottom", "toSide": "top" },
+    { "id": "t-prep-void", "from": "kds_prep", "to": "order_voided", "variant": "security", "route": "straight", "fromSide": "bottom", "toSide": "top" },
+    { "id": "t-billing-pay", "from": "table_billing", "to": "razorpay_gateway", "variant": "security", "route": "straight", "fromSide": "bottom", "toSide": "top" },
+    { "id": "t-pay-fail", "from": "razorpay_gateway", "to": "payment_failed", "variant": "security", "route": "straight", "fromSide": "bottom", "toSide": "top" },
+    { "id": "t-settled-rotate", "from": "table_settled", "to": "qr_rotation", "variant": "emphasis", "route": "straight", "fromSide": "bottom", "toSide": "top" },
+    { "id": "t-rotate-freed", "from": "qr_rotation", "to": "table_freed", "variant": "emphasis", "route": "straight", "fromSide": "bottom", "toSide": "top" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Core Dining Phase Track",
+      "items": [
+        "Table transitions through AVAILABLE -> OCCUPIED -> ORDERED -> BILLING -> SETTLED",
+        "FastAPI synchronizes TableStatus on customer scan, order creation, and bill settlement",
+        "Session closure clears active_session_id and resets table back to AVAILABLE for next party"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Kitchen & Gateway Wait States",
+      "items": [
+        "Kitchen preparation holds ticket state while chef marks items ACCEPTED -> PREPARING -> READY",
+        "Billing triggers Razorpay order generation and awaits verified HMAC SHA-256 webhook payload"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "QR Token Lifecycle & Security",
+      "items": [
+        "QR rotation generates new public_id, crypto secret, and increments qr_version atomically",
+        "Old QR codes are rejected with 401 Unauthorized; active dining sessions remain isolated"
+      ]
+    }
+  ]
+}

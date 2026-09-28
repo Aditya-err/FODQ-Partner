@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "FODQ Restaurant OS Architecture",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "qr-ordering-flow",
+        "label": "QR Ordering Flow",
+        "focus": ["customer_web", "customer_app", "gateway", "auth_service", "fastapi_core", "postgres", "redis"],
+        "note": "Customer scans QR code, session is cryptographically validated, orders are placed and broadcast."
+      },
+      {
+        "id": "kitchen-and-staff",
+        "label": "Kitchen & Staff Flow",
+        "focus": ["owner_admin", "kitchen_kds", "gateway", "fastapi_core", "redis", "postgres"],
+        "note": "Staff authenticate via JWT to manage tables and live KDS orders in the kitchen."
+      },
+      {
+        "id": "billing-and-payment",
+        "label": "Billing & Razorpay Payment",
+        "focus": ["customer_web", "gateway", "fastapi_core", "billing_payment", "razorpay", "postgres"],
+        "note": "Bill calculated server-side, payment captured via signed Razorpay webhook."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "customer_web",
+      "type": "frontend",
+      "label": "Customer Web",
+      "sublabel": "Next.js 16 / Mobile Browser",
+      "tag": "Zero Install",
+      "pos": [40, 60],
+      "size": [140, 60]
+    },
+    {
+      "id": "customer_app",
+      "type": "frontend",
+      "label": "Customer App",
+      "sublabel": "Flutter Android / iOS",
+      "tag": "Optional Client",
+      "pos": [40, 160],
+      "size": [140, 60]
+    },
+    {
+      "id": "owner_admin",
+      "type": "frontend",
+      "label": "Owner & Admin App",
+      "sublabel": "Flutter Mobile & Next.js Admin",
+      "tag": "JWT Authenticated",
+      "pos": [40, 310],
+      "size": [140, 60]
+    },
+    {
+      "id": "kitchen_kds",
+      "type": "frontend",
+      "label": "Kitchen KDS",
+      "sublabel": "Next.js / Tablet Web",
+      "tag": "KDS Order Flow",
+      "pos": [40, 410],
+      "size": [140, 60]
+    },
+    {
+      "id": "gateway",
+      "type": "cloud",
+      "label": "Edge Reverse Proxy",
+      "sublabel": "Cloudflare Tunnel / Nginx",
+      "tag": "HTTPS :443",
+      "pos": [250, 235],
+      "size": [140, 64]
+    },
+    {
+      "id": "auth_service",
+      "type": "security",
+      "label": "Auth & QR Security",
+      "sublabel": "JWT & QR Hash Verification",
+      "tag": "Cryptographic Check",
+      "pos": [460, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "fastapi_core",
+      "type": "backend",
+      "label": "FastAPI Backend",
+      "sublabel": "Python ASGI :8000",
+      "tag": "Business Authority",
+      "pos": [460, 235],
+      "size": [140, 64]
+    },
+    {
+      "id": "billing_payment",
+      "type": "backend",
+      "label": "Billing Engine",
+      "sublabel": "Tax, Split & Invoicing",
+      "tag": "Server Calculated",
+      "pos": [460, 390],
+      "size": [140, 64]
+    },
+    {
+      "id": "redis",
+      "type": "database",
+      "label": "Redis 7",
+      "sublabel": "Cache, Locks & Pub/Sub",
+      "tag": "Realtime Coordination",
+      "pos": [740, 90],
+      "size": [140, 64]
+    },
+    {
+      "id": "postgres",
+      "type": "database",
+      "label": "PostgreSQL 16",
+      "sublabel": "Relational Source of Truth",
+      "tag": "ACID Persistence",
+      "pos": [740, 235],
+      "size": [140, 64]
+    },
+    {
+      "id": "razorpay",
+      "type": "external",
+      "label": "Razorpay Gateway",
+      "sublabel": "Payment Orders & Webhooks",
+      "tag": "HMAC SHA-256",
+      "pos": [740, 390],
+      "size": [140, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Untrusted Client Zone (Customer Web & Mobile)",
+      "wraps": ["customer_web", "customer_app"],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "Staff & Kitchen Zone (Role-Based Access)",
+      "wraps": ["owner_admin", "kitchen_kds"],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "Trusted Backend Core (FastAPI Application)",
+      "wraps": ["auth_service", "fastapi_core", "billing_payment"],
+      "pad": 18
+    },
+    {
+      "kind": "security-group",
+      "label": "Isolated Persistence Tier",
+      "wraps": ["redis", "postgres"],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "External Payment Provider",
+      "wraps": ["razorpay"],
+      "pad": 16
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn_web_gateway",
+      "from": "customer_web",
+      "to": "gateway",
+      "label": "QR scan & orders",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "top"
+    },
+    {
+      "id": "conn_app_gateway",
+      "from": "customer_app",
+      "to": "gateway",
+      "label": "dine API",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "conn_owner_gateway",
+      "from": "owner_admin",
+      "to": "gateway",
+      "label": "owner API",
+      "variant": "security",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelDy": 20
+    },
+    {
+      "id": "conn_kitchen_gateway",
+      "from": "kitchen_kds",
+      "to": "gateway",
+      "label": "KDS orders",
+      "fromSide": "right",
+      "toSide": "bottom"
+    },
+    {
+      "id": "conn_gateway_core",
+      "from": "gateway",
+      "to": "fastapi_core",
+      "label": "reverse proxy",
+      "variant": "emphasis"
+    },
+    {
+      "id": "conn_core_auth",
+      "from": "fastapi_core",
+      "to": "auth_service",
+      "label": "verify session & QR",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDy": -35
+    },
+    {
+      "id": "conn_core_billing",
+      "from": "fastapi_core",
+      "to": "billing_payment",
+      "label": "bill requests",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "conn_billing_razorpay",
+      "from": "billing_payment",
+      "to": "razorpay",
+      "label": "order & webhook",
+      "variant": "emphasis"
+    },
+    {
+      "id": "conn_core_redis",
+      "from": "fastapi_core",
+      "to": "redis",
+      "label": "cache & pub/sub",
+      "fromSide": "top",
+      "toSide": "left"
+    },
+    {
+      "id": "conn_core_postgres",
+      "from": "fastapi_core",
+      "to": "postgres",
+      "label": "SQL state",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Client & Edge Ingress",
+      "items": [
+        "Customer Web (Next.js) handles zero-install table ordering over mobile data or Wi-Fi",
+        "Edge reverse proxy (Cloudflare / Nginx) terminates HTTPS :443 and protects backend ports",
+        "Owner Flutter App and Kitchen KDS communicate with the identical backend API"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Trust Boundaries & Security",
+      "items": [
+        "Cryptographic QR secret hash validation proves physical presence at table",
+        "Owner & Kitchen authenticated via JWT Bearer tokens and device session tracking",
+        "Server-side authority: clients never dictate item prices, bill totals, or table states"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Order, Payment & Persistence",
+      "items": [
+        "Orders transition: PLACED → ACCEPTED → PREPARING → READY → SERVED on KDS",
+        "Payment verification: Razorpay webhook HMAC signature verified before session closure",
+        "PostgreSQL guarantees ACID persistence; Redis provides rate limits and realtime pub/sub"
+      ]
+    }
+  ]
+}

@@ -242,10 +242,14 @@ Every diagram below is compiled with the official Archify verification suite (10
 
 | Diagram Model | Interactive Artifact | Technical Scope |
 | :--- | :--- | :--- |
-| 🌐 **System Architecture** | [**Launch Interactive Viewer ↗**](docs/architecture/system-architecture.html) | Global runtime components, trust boundaries, and platform connections |
-| 🔄 **Ordering & Kitchen Flow** | [**Launch Interactive Viewer ↗**](docs/architecture/ordering-flow.html) | Micro-sequence from QR scan to line cook dispatch and payment webhook |
-| 🚶 **Customer Experience Journey** | [**Launch Interactive Viewer ↗**](docs/architecture/customer-journey.html) | Multi-lane workflow mapping diner discovery, customization, and receipts |
-| 🧑‍💼 **Restaurant Partner Workflow** | [**Launch Interactive Viewer ↗**](docs/architecture/restaurant-workflow.html) | Restaurateur operational lifecycle covering floor setup, KDS, and analytics |
+| 🌐 **Complete System Architecture** | [**Launch Interactive Viewer ↗**](docs/architecture/01-complete-system-architecture.html) | Global runtime components, trust boundaries, and platform connections |
+| 📱 **QR Ingress & Dine Session** | [**Launch Interactive Viewer ↗**](docs/architecture/02-qr-scan-dine-session-order.html) | Micro-sequence from table QR scan to session initialization |
+| 👨‍🍳 **Order Routing & Kitchen Status** | [**Launch Interactive Viewer ↗**](docs/architecture/03-customer-ordering-kitchen-status.html) | Real-time KDS line dispatch and order status state machine |
+| 💳 **Billing, Razorpay & Session Closure** | [**Launch Interactive Viewer ↗**](docs/architecture/04-billing-razorpay-webhook-closure.html) | Itemized fiscal billing, webhook verification, and table closure |
+| 🔐 **Owner Authentication & RBAC** | [**Launch Interactive Viewer ↗**](docs/architecture/05-authentication-rbac.html) | Phone + OTP verification, JWT session tokens, and permission enforcement |
+| 🗄️ **Database & Redis Dataflow** | [**Launch Interactive Viewer ↗**](docs/architecture/06-database-redis-dataflow.html) | PostgreSQL authoritative persistence and Redis real-time pubsub coordination |
+| 🪑 **Table & QR Lifecycle Management** | [**Launch Interactive Viewer ↗**](docs/architecture/07-restaurant-table-qr-lifecycle.html) | Table capacity, live vacancy, and cryptographic QR token lifecycle |
+| 📊 **Owner & Inventory Operations** | [**Launch Interactive Viewer ↗**](docs/architecture/08-owner-admin-operations.html) | Restaurant settings, menu management, and immutable stock movement ledger |
 
 <img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
 
@@ -385,9 +389,13 @@ Click any screenshot below to open high-resolution fullscreen preview in the [In
 - [x] **Digital Payment Gateway**: Razorpay UPI and card settlement with signed webhook verification
 - [x] **Floor & Table Management**: Dynamic table provisioning with bulk sticker and PDF export
 - [x] **Analytics Dashboard**: Operational metrics, peak hour analysis, and sales turnover
+- [x] **Owner Phone + OTP Authentication (Phase 15)**: Passwordless verification, device tracking, and instant login
+- [x] **Table Capacity, Live Vacancy & Party Size (Phase 16)**: Dynamic seating management, capacity tracking, live table vacancy calculation
+- [x] **Food Preparation Time & Live Order Timer (Phase 17)**: Item-level prep estimates, synchronized order countdown, KDS timer
+- [x] **Inventory & Stock Management Foundation (Phase 18)**: Tenant-isolated stock items, authoritative stock status, immutable movement ledger, pessimistic row locking & concurrency safety
 - [ ] **Offline Kitchen Resilience**: Local network queueing for intermittent internet connectivity
 - [ ] **Multi-Language Diner Localization**: Seamless language switching across regional languages
-- [ ] **Live Inventory Depletion**: Automated stock decrementing mapped to ingredient recipes
+- [ ] **Recipe-Linked Live Inventory Depletion**: Automated ingredient decrementing mapped to menu recipes
 - [ ] **Direct Customer Feedback Loop**: Post-meal rating collection and guest loyalty incentives
 
 <img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />

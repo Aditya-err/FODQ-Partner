@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Database & Redis Data Architecture",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "ephemeral-coordination",
+        "label": "1. Ephemeral Cache & Pub/Sub",
+        "focus": ["api_ingress", "redis_cache", "redis_pubsub"],
+        "note": "Redis absorbs high-throughput token validations, rate limits, and real-time event distribution."
+      },
+      {
+        "id": "acid-persistence",
+        "label": "2. PostgreSQL System of Record",
+        "focus": ["api_ingress", "pg_write", "pg_audit"],
+        "note": "All financial transactions, orders, and cryptographic session states commit durably with ACID guarantees."
+      },
+      {
+        "id": "reporting-pipeline",
+        "label": "3. Analytics & Auditing",
+        "focus": ["pg_write", "pg_audit", "analytics_read"],
+        "note": "Aggregates revenue, table occupancy, and immutable audit trails for restaurant owners."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "api_ingress",
+      "type": "backend",
+      "label": "FastAPI Core",
+      "sublabel": "Business Logic & State",
+      "tag": "State Authority",
+      "pos": [40, 185],
+      "size": [140, 64]
+    },
+    {
+      "id": "redis_cache",
+      "type": "database",
+      "label": "Redis Cache & Locks",
+      "sublabel": "Rate Limits & Redlock",
+      "tag": "Sub-millisecond",
+      "pos": [280, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "redis_pubsub",
+      "type": "messagebus",
+      "label": "Redis Pub/Sub",
+      "sublabel": "Live Order Broadcasts",
+      "tag": "Realtime Push",
+      "pos": [520, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "pg_write",
+      "type": "database",
+      "label": "PostgreSQL Primary",
+      "sublabel": "orders, bills, tables",
+      "tag": "ACID Engine",
+      "pos": [280, 290],
+      "size": [140, 64]
+    },
+    {
+      "id": "pg_audit",
+      "type": "database",
+      "label": "PostgreSQL Audit",
+      "sublabel": "webhooks & audit_logs",
+      "tag": "Immutable Ledger",
+      "pos": [520, 290],
+      "size": [140, 64]
+    },
+    {
+      "id": "analytics_read",
+      "type": "cloud",
+      "label": "Analytics Engine",
+      "sublabel": "Sales, Tax & Occupancy",
+      "tag": "Reporting View",
+      "pos": [760, 185],
+      "size": [140, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Application Authority",
+      "wraps": ["api_ingress"],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "Redis In-Memory Tier",
+      "wraps": ["redis_cache", "redis_pubsub"],
+      "pad": 16
+    },
+    {
+      "kind": "security-group",
+      "label": "PostgreSQL Durable Persistence Tier",
+      "wraps": ["pg_write", "pg_audit"],
+      "pad": 16
+    },
+    {
+      "kind": "region",
+      "label": "Management Intelligence",
+      "wraps": ["analytics_read"],
+      "pad": 16
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn_api_cache",
+      "from": "api_ingress",
+      "to": "redis_cache",
+      "label": "locks & counters",
+      "variant": "emphasis"
+    },
+    {
+      "id": "conn_cache_pubsub",
+      "from": "redis_cache",
+      "to": "redis_pubsub",
+      "label": "order.new events",
+      "variant": "dashed"
+    },
+    {
+      "id": "conn_api_write",
+      "from": "api_ingress",
+      "to": "pg_write",
+      "label": "orders & bills",
+      "variant": "emphasis"
+    },
+    {
+      "id": "conn_write_audit",
+      "from": "pg_write",
+      "to": "pg_audit",
+      "label": "audit events",
+      "variant": "default"
+    },
+    {
+      "id": "conn_pubsub_analytics",
+      "from": "redis_pubsub",
+      "to": "analytics_read",
+      "label": "realtime counters",
+      "variant": "dashed"
+    },
+    {
+      "id": "conn_audit_analytics",
+      "from": "pg_audit",
+      "to": "analytics_read",
+      "label": "revenue reconciliation",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Strict Persistence Division",
+      "items": [
+        "PostgreSQL is the permanent source of truth; data survives server recycles and redeployments",
+        "Redis is treated as strictly volatile; if Redis restarts, database state remains 100% intact",
+        "All customer dine tokens and rate limits expire automatically via Redis TTL"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Concurrency & Idempotency",
+      "items": [
+        "Redis Redlock distributed locking prevents double-spend and duplicate order clicks",
+        "Webhook idempotency tables in PostgreSQL prevent duplicate payment captures",
+        "Isolation level ensures parallel bills on split tables calculate taxes without race conditions"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "Analytics Without Contention",
+      "items": [
+        "Dashboard metrics execute targeted aggregation queries with indexed timestamp ranges",
+        "Heavy reporting reads do not block active table ordering or cashier billing writes",
+        "Audit logs maintain non-repudiable history of table rotations and staff refunds"
+      ]
+    }
+  ]
+}
