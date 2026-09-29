@@ -321,6 +321,75 @@ A dining session represents one party's visit at a table. Multiple orders can be
 
 ---
 
+### 2.15 `inventory_items` & `inventory_movements` (Phase 18)
+
+Authoritative inventory catalog with pessimistic locking and append-only stock movement ledger.
+
+| Table | Primary Columns | Key Constraints & Indexes |
+|---|---|---|
+| `inventory_items` | `id` (UUID), `restaurant_id` (UUID), `item_name`, `sku`, `unit`, `current_quantity`, `minimum_quantity`, `cost_per_unit_paise` | FK -> restaurants(id), UNIQUE(restaurant_id, sku) |
+| `inventory_movements` | `id` (UUID), `restaurant_id`, `inventory_item_id`, `movement_type`, `quantity`, `balance_after`, `reference_type`, `reference_id` | FK -> inventory_items(id), idx_inventory_movements_item_time |
+
+---
+
+### 2.16 `recipes` & `recipe_ingredients` (Phase 19)
+
+Bill of Materials (BOM) linking menu items with automatic unit conversions for real-time order consumption.
+
+| Table | Primary Columns | Key Constraints & Indexes |
+|---|---|---|
+| `recipes` | `id` (UUID), `restaurant_id`, `menu_item_id`, `prep_notes`, `yield_servings` | FK -> menu_items(id), UNIQUE(restaurant_id, menu_item_id) |
+| `recipe_ingredients` | `id` (UUID), `recipe_id`, `inventory_item_id`, `quantity_per_menu_unit`, `recipe_unit` | FK -> recipes(id), FK -> inventory_items(id) |
+
+---
+
+### 2.17 `daily_prep_plans` & `daily_prep_items` (Phase 20)
+
+Historical demand aggregation and next-day preparation planning.
+
+| Table | Primary Columns | Key Constraints & Indexes |
+|---|---|---|
+| `daily_prep_plans` | `id` (UUID), `restaurant_id`, `plan_date`, `status`, `buffer_multiplier` | FK -> restaurants(id), UNIQUE(restaurant_id, plan_date) |
+| `daily_prep_items` | `id` (UUID), `plan_id`, `menu_item_id`, `projected_quantity`, `actual_prepared` | FK -> daily_prep_plans(id) |
+
+---
+
+### 2.18 `suppliers`, `supplier_items`, `purchase_orders`, `purchase_order_items` (Phase 21)
+
+Procurement lifecycle tracking supplier catalogs, purchase orders, and partial goods receipts.
+
+| Table | Primary Columns | Key Constraints & Indexes |
+|---|---|---|
+| `suppliers` | `id` (UUID), `restaurant_id`, `supplier_name`, `contact_phone`, `email` | FK -> restaurants(id) |
+| `supplier_items` | `id` (UUID), `supplier_id`, `inventory_item_id`, `purchase_price`, `conversion_factor` | FK -> suppliers(id), FK -> inventory_items(id) |
+| `purchase_orders` | `id` (UUID), `restaurant_id`, `po_number`, `supplier_id`, `status`, `total_amount_paise` | FK -> restaurants(id), UNIQUE(restaurant_id, po_number) |
+| `purchase_order_items` | `id` (UUID), `po_id`, `inventory_item_id`, `ordered_quantity`, `received_quantity`, `unit_price_paise` | FK -> purchase_orders(id) |
+
+---
+
+### 2.19 `inventory_wastage` & `daily_stock_variances` (Phase 22)
+
+Physical wastage incident logging and daily theoretical vs actual stock variance evaluation.
+
+| Table | Primary Columns | Key Constraints & Indexes |
+|---|---|---|
+| `inventory_wastage` | `id` (UUID), `restaurant_id`, `inventory_item_id`, `quantity`, `reason_category`, `is_reversed` | FK -> inventory_items(id) |
+| `daily_stock_variances` | `id` (UUID), `restaurant_id`, `inventory_item_id`, `variance_date`, `theoretical_consumption`, `actual_consumption`, `variance_quantity` | UNIQUE(restaurant_id, inventory_item_id, variance_date) |
+
+---
+
+### 2.20 `financial_ledger_entries`, `refunds`, `financial_anomalies` (Phase 24)
+
+Tamper-evident append-only financial ledger, refund management, and automated discrepancy detection.
+
+| Table | Primary Columns | Key Constraints & Indexes |
+|---|---|---|
+| `financial_ledger_entries` | `id` (UUID), `restaurant_id`, `event_type`, `amount_paise`, `bill_id`, `payment_id`, `refund_id`, `balance_after_paise` | Immutable (ORM before_update/before_delete listener), compound indexes |
+| `refunds` | `id` (UUID), `restaurant_id`, `payment_id`, `bill_id`, `amount_paise`, `status`, `reason` | FK -> payments(id), FK -> bills(id) |
+| `financial_anomalies` | `id` (UUID), `restaurant_id`, `anomaly_type`, `severity`, `status`, `details`, `bill_id`, `payment_id` | Compound indexes on (restaurant_id, status) |
+
+---
+
 ## 3. Key Relationships Summary
 
 ```text
@@ -329,10 +398,14 @@ restaurants 1──M tables
 restaurants 1──M menu_categories 1──M menu_items
 tables 1──M table_sessions
 table_sessions 1──M orders 1──M order_items
-table_sessions 1──1 bills
+table_sessions 1──1 bills 1──M payments
+bills 1──M refunds
 menu_items 1──M order_items
-menu_items 1──M reviews
-order_items 1──1 reviews
-users 1──M refresh_tokens
-restaurants 1──M audit_logs
+menu_items 1──1 recipes 1──M recipe_ingredients M──1 inventory_items
+inventory_items 1──M inventory_movements
+restaurants 1──M suppliers 1──M supplier_items
+restaurants 1──M purchase_orders 1──M purchase_order_items
+restaurants 1──M inventory_wastage
+restaurants 1──M financial_ledger_entries (Append-only)
+restaurants 1──M financial_anomalies
 ```

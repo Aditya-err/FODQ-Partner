@@ -389,13 +389,19 @@ Click any screenshot below to open high-resolution fullscreen preview in the [In
 - [x] **Digital Payment Gateway**: Razorpay UPI and card settlement with signed webhook verification
 - [x] **Floor & Table Management**: Dynamic table provisioning with bulk sticker and PDF export
 - [x] **Analytics Dashboard**: Operational metrics, peak hour analysis, and sales turnover
-- [x] **Owner Phone + OTP Authentication (Phase 15)**: Passwordless verification, device tracking, and instant login
-- [x] **Table Capacity, Live Vacancy & Party Size (Phase 16)**: Dynamic seating management, capacity tracking, live table vacancy calculation
-- [x] **Food Preparation Time & Live Order Timer (Phase 17)**: Item-level prep estimates, synchronized order countdown, KDS timer
-- [x] **Inventory & Stock Management Foundation (Phase 18)**: Tenant-isolated stock items, authoritative stock status, immutable movement ledger, pessimistic row locking & concurrency safety
+- [x] **Owner Phone + OTP Authentication (Phase 15)**: Passwordless verification, device tracking, and instant login ([Doc](docs/phases/phase-15-phone-otp-auth.md))
+- [x] **Table Capacity, Live Vacancy & Party Size (Phase 16)**: Dynamic seating management, capacity tracking, live table vacancy calculation ([Doc](docs/phases/phase-16-table-capacity-party-size.md))
+- [x] **Food Preparation Time & Live Order Timer (Phase 17)**: Item-level prep estimates, synchronized order countdown, KDS timer ([Doc](docs/phases/phase-17-preparation-time.md))
+- [x] **Inventory & Stock Management Foundation (Phase 18)**: Tenant-isolated stock items, authoritative stock status, immutable movement ledger, pessimistic row locking & concurrency safety ([Doc](docs/phases/phase-18-inventory-foundation.md))
+- [x] **Recipe/BOM Mapping & Automatic Ingredient Consumption (Phase 19)**: Bill of Materials, authoritative unit conversion, automatic real-time ingredient depletion on order placement ([Doc](docs/phases/phase-19-recipe-bom-consumption.md))
+- [x] **Daily Stock Requirement & Next-Day Planning (Phase 20)**: Historical consumption forecasting, buffer multipliers, safety stock, next-day prep requirement calculations ([Doc](docs/phases/phase-20-inventory-planning.md))
+- [x] **Procurement & Purchase Order Foundation (Phase 21)**: Supplier directory, purchase orders, goods receipt, partial deliveries, stock unit conversions, PO cancellation safeguards ([Doc](docs/phases/phase-21-procurement-foundation.md))
+- [x] **Wastage, Stock Variance & Inventory Loss Management (Phase 22)**: Physical wastage ledgers, reason tracking, reversible audits, daily theoretical vs actual variance calculations ([Doc](docs/phases/phase-22-wastage-variance.md))
+- [x] **Food Cost & Profitability Analytics Foundation (Phase 23)**: Real-time ingredient cost resolution hierarchy (PO -> Catalog -> Unavailable), gross contribution margins, wastage cost loss ranking ([Doc](docs/phases/phase-23-food-cost-profitability.md))
+- [x] **Financial Ledger & Payment Reconciliation Foundation (Phase 24)**: Append-only immutable financial transaction ledger, server-authoritative bill-payment reconciliation, refund ceilings, 8 deterministic anomaly detection rules ([Doc](docs/phases/phase-24-financial-reconciliation.md))
+- [ ] **Daily Cash Closing & Register Reconciliation**: Cash drawer count, opening float, physical cash variance verification
 - [ ] **Offline Kitchen Resilience**: Local network queueing for intermittent internet connectivity
 - [ ] **Multi-Language Diner Localization**: Seamless language switching across regional languages
-- [ ] **Recipe-Linked Live Inventory Depletion**: Automated ingredient decrementing mapped to menu recipes
 - [ ] **Direct Customer Feedback Loop**: Post-meal rating collection and guest loyalty incentives
 
 <img src="./assets/dividers/orange-glow-line.svg" width="100%" height="8" alt="divider" />
