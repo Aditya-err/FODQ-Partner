@@ -390,6 +390,17 @@ Tamper-evident append-only financial ledger, refund management, and automated di
 
 ---
 
+### 2.21 `cash_closing_sessions` & `cash_adjustments` (Phase 25)
+
+Daily cash closing sessions, denomination breakdown, variance classification, and auditable cash drawer movements.
+
+| Table | Primary Columns | Key Constraints & Indexes |
+|---|---|---|
+| `cash_closing_sessions` | `id` (UUID), `restaurant_id`, `business_date`, `status`, `opening_float_paise`, `expected_cash_paise`, `cash_sales_paise`, `cash_refunds_paise`, `cash_adjustments_paise`, `counted_cash_paise`, `variance_paise`, `variance_status`, `denominations_json`, `opened_at`, `closed_at`, `version` | Partial UNIQUE(restaurant_id, business_date) WHERE status = 'OPEN', immutable once CLOSED |
+| `cash_adjustments` | `id` (UUID), `cash_session_id`, `restaurant_id`, `adjustment_type`, `amount_paise`, `reason`, `created_by_user_id`, `created_by_name`, `created_at` | FK -> cash_closing_sessions(id), FK -> restaurants(id) |
+
+---
+
 ## 3. Key Relationships Summary
 
 ```text
@@ -408,4 +419,6 @@ restaurants 1──M purchase_orders 1──M purchase_order_items
 restaurants 1──M inventory_wastage
 restaurants 1──M financial_ledger_entries (Append-only)
 restaurants 1──M financial_anomalies
+restaurants 1──M cash_closing_sessions 1──M cash_adjustments
 ```
+
