@@ -400,6 +400,7 @@ Click any screenshot below to open high-resolution fullscreen preview in the [In
 - [x] **Food Cost & Profitability Analytics Foundation (Phase 23)**: Real-time ingredient cost resolution hierarchy (PO -> Catalog -> Unavailable), gross contribution margins, wastage cost loss ranking ([Doc](docs/phases/phase-23-food-cost-profitability.md))
 - [x] **Financial Ledger & Payment Reconciliation Foundation (Phase 24)**: Append-only immutable financial transaction ledger, server-authoritative bill-payment reconciliation, refund ceilings, 8 deterministic anomaly detection rules ([Doc](docs/phases/phase-24-financial-reconciliation.md))
 - [x] **Daily Cash Closing & Cash Reconciliation Foundation (Phase 25)**: Server-authoritative cash sessions, float control, denomination breakdown, physical count auditing, mathematical variance detection, pessimistic row-locking & double-close safety ([Doc](docs/phases/phase-25-daily-cash-closing.md))
+- [x] **Reports, Statements & Export Foundation (Phase 26)**: Read-only reporting layer, 10 dedicated reports + executive overview, formula injection immune CSV exports, standalone printable HTML views, integer paise arithmetic & fine-grained RBAC ([Doc](docs/phases/phase-26-reports-statements-exports.md))
 - [ ] **Offline Kitchen Resilience**: Local network queueing for intermittent internet connectivity
 - [ ] **Multi-Language Diner Localization**: Seamless language switching across regional languages
 - [ ] **Direct Customer Feedback Loop**: Post-meal rating collection and guest loyalty incentives
